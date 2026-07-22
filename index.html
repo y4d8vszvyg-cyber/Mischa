@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ihr persönlicher Brief – Nordlicht Versicherung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #101c2c;
+    --ink-soft: #24344a;
+    --paper: #eae6dd;
+    --paper-dim: #d9d3c5;
+    --brass: #b98a4e;
+    --brass-light: #d9ae74;
+    --line: rgba(16,28,44,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .page{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background: var(--ink);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Texture: faint paper grain via layered radial gradients */
+  .page::before{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(185,138,78,0.10), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(185,138,78,0.07), transparent 45%);
+    pointer-events:none;
+  }
+
+  header{
+    padding: 28px 28px 8px;
+    position:relative;
+    z-index:1;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    font-family:'Fraunces', serif;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    color: var(--brass-light);
+    text-transform: uppercase;
+  }
+  .brand svg{ flex-shrink:0; }
+
+  .eyebrow{
+    margin-top: 22px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(234,230,221,0.55);
+  }
+  h1{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 7vw, 34px);
+    line-height:1.15;
+    margin: 10px 0 0;
+    color: var(--paper);
+  }
+  h1 em{
+    font-style: normal;
+    color: var(--brass-light);
+  }
+
+  /* Envelope / letter-opening video frame */
+  .letter-wrap{
+    margin: 28px 20px 8px;
+    position: relative;
+    z-index:1;
+  }
+  .flap{
+    position:absolute;
+    top:0; left:0; right:0;
+    height: 46%;
+    background: linear-gradient(135deg, var(--ink-soft), var(--ink));
+    clip-path: polygon(0 0, 100% 0, 50% 78%);
+    border-radius: 14px 14px 0 0;
+    transform-origin: top center;
+    animation: openFlap 1.4s cubic-bezier(.4,0,.2,1) 0.4s both;
+    z-index: 3;
+    border: 1px solid var(--line);
+  }
+  @keyframes openFlap{
+    0%{ transform: rotateX(0deg); }
+    100%{ transform: rotateX(-160deg); opacity: 0.15; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .flap{ animation: none; opacity: 0; }
+  }
+
+  .video-frame{
+    position:relative;
+    border-radius: 14px;
+    overflow:hidden;
+    border: 1px solid var(--line);
+    background: linear-gradient(160deg, #1c2c42, #0c1420 70%);
+    aspect-ratio: 9 / 13;
+  }
+  .video-still{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column;
+    gap:16px;
+    text-align:center;
+    padding: 0 30px;
+  }
+  .avatar-ring{
+    width:88px; height:88px;
+    border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, #3a5170, #101c2c);
+    border: 1px solid rgba(217,174,116,0.4);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .avatar-ring svg{ opacity:0.85; }
+  .play-btn{
+    width:56px; height:56px;
+    border-radius:50%;
+    background: var(--brass);
+    border:none;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    box-shadow: 0 8px 24px rgba(185,138,78,0.35);
+    transition: transform .2s ease;
+  }
+  .play-btn:hover{ transform: scale(1.06); }
+  .play-btn:focus-visible{ outline: 2px solid var(--brass-light); outline-offset: 3px; }
+  .caption-name{
+    font-family:'Fraunces', serif;
+    font-size: 19px;
+    color: var(--paper);
+  }
+  .caption-sub{
+    font-size: 13px;
+    color: rgba(234,230,221,0.6);
+    max-width: 280px;
+  }
+  .runtime{
+    position:absolute; bottom:14px; left:14px;
+    font-size:11px; letter-spacing:0.08em;
+    color: rgba(234,230,221,0.55);
+    background: rgba(0,0,0,0.25);
+    padding: 4px 8px; border-radius: 20px;
+  }
+
+  section.copy{
+    padding: 26px 28px 6px;
+    position:relative; z-index:1;
+  }
+  .copy p{
+    font-size: 15px;
+    line-height:1.6;
+    color: rgba(234,230,221,0.82);
+    margin: 0 0 16px;
+  }
+  .fact-row{
+    display:flex;
+    gap: 14px;
+    margin: 22px 0 8px;
+  }
+  .fact{
+    flex:1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px 14px;
+  }
+  .fact .num{
+    font-family:'Fraunces', serif;
+    font-size: 22px;
+    color: var(--brass-light);
+    display:block;
+  }
+  .fact .label{
+    font-size: 11.5px;
+    color: rgba(234,230,221,0.6);
+    margin-top: 2px;
+    display:block;
+    line-height:1.4;
+  }
+
+  .actions{
+    padding: 22px 28px 40px;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    position:relative; z-index:1;
+  }
+  .btn{
+    display:block;
+    text-align:center;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration:none;
+    cursor:pointer;
+    border:none;
+  }
+  .btn-primary{
+    background: var(--brass);
+    color: #1a1206;
+  }
+  .btn-primary:hover{ background: var(--brass-light); }
+  .btn-secondary{
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid rgba(234,230,221,0.28);
+  }
+  .btn-secondary:hover{ border-color: rgba(234,230,221,0.5); }
+  .fineprint{
+    font-size: 11.5px;
+    color: rgba(234,230,221,0.42);
+    text-align:center;
+    margin-top: 4px;
+    line-height:1.5;
+  }
+
+  .badge-note{
+    margin: 0 28px 30px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: rgba(185,138,78,0.08);
+    border: 1px solid rgba(185,138,78,0.25);
+    font-size: 12.5px;
+    color: rgba(234,230,221,0.75);
+    line-height:1.5;
+    position:relative; z-index:1;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 1L18 5V10C18 14.5 14.6 18.2 10 19C5.4 18.2 2 14.5 2 10V5L10 1Z" stroke="#d9ae74" stroke-width="1.3"/></svg>
+      Nordlicht Versicherung
+    </div>
+    <div class="eyebrow" id="eyebrow">Persönliche Nachricht</div>
+    <h1 id="titel">Danke für <em>17 Jahre</em><br>gemeinsamen Weg, Herr&nbsp;Weber.</h1>
+  </header>
+
+  <div class="letter-wrap">
+    <div class="video-frame">
+      <div class="flap"></div>
+      <div class="video-still">
+        <div class="avatar-ring">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#d9ae74" stroke-width="1.4"/></svg>
+        </div>
+        <button class="play-btn" aria-label="Video abspielen">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 4l10 6-10 6V4z" fill="#1a1206"/></svg>
+        </button>
+        <div class="caption-name">Ihre persönliche Nachricht</div>
+        <div class="caption-sub">Individuell erstellt anhand Ihrer Vertragsdaten · 46 Sekunden</div>
+      </div>
+      <div class="runtime">0:46</div>
+    </div>
+  </div>
+
+  <section class="copy">
+    <p>Seit <span id="v-beginn">2009</span> sind Sie bei uns versichert – über die Jahre haben Sie sich für Verlässlichkeit entschieden, und dafür möchten wir uns bei Ihnen bedanken.</p>
+    <p>Ihre <span id="v-produkt">Versicherung</span> läuft am <strong id="v-ablauf" style="color:var(--paper)">30. September 2026</strong> aus. Damit für Sie nichts ins Stocken gerät, haben wir die wichtigsten Punkte für Sie zusammengefasst:</p>
+    <div class="fact-row">
+      <div class="fact">
+        <span class="num" id="v-jahre">17</span>
+        <span class="label">Jahre Vertragstreue</span>
+      </div>
+      <div class="fact">
+        <span class="num" id="v-schaeden">0</span>
+        <span class="label">Schadensfälle bearbeitet</span>
+      </div>
+      <div class="fact">
+        <span class="num" id="v-rabatt">−12%</span>
+        <span class="label">Neubeitrag bei Verlängerung</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="badge-note">
+    Dieses Video wurde eigens für Sie aus Ihren Vertragsdaten erstellt – von niemand anderem gesehen als Ihnen.
+  </div>
+
+  <div class="actions">
+    <a href="#" class="btn btn-primary">Vertrag mit einem Klick verlängern</a>
+    <a href="#" class="btn btn-secondary">Rückruf von meiner Betreuerin anfordern</a>
+    <div class="fineprint">Ihre Daten werden ausschließlich zur Erstellung dieser<br>persönlichen Nachricht verwendet · DSGVO-konform</div>
+  </div>
+</div>
+<script>
+  (function () {
+    "use strict";
+    var q = new URLSearchParams(location.search);
+    function val(key, def) {
+      var v = q.get(key);
+      return v === null || v === "" ? def : v;
+    }
+    var MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni",
+      "Juli", "August", "September", "Oktober", "November", "Dezember"];
+    function langDatum(iso) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+      if (!m) return iso || "";
+      return parseInt(m[3], 10) + ". " + MONATE[parseInt(m[2], 10) - 1] + " " + m[1];
+    }
+    function kurzDatum(iso) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || "");
+      return m ? m[3] + "." + m[2] + "." : "";
+    }
+    function setText(id, text) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    var anrede = val("a", "Herr");
+    var nachname = val("n", "Weber");
+    var jahre = val("j", "17");
+    var beginn = val("b", "2009");
+    var ablauf = val("e", "2026-09-30");
+    var produkt = val("p", "Versicherung");
+    var schaeden = val("s", "0");
+    var rabatt = val("r", "12");
+
+    var titel = document.getElementById("titel");
+    if (titel) {
+      titel.innerHTML =
+        "Danke für <em>" + jahre + " Jahre</em><br>gemeinsamen Weg, " +
+        anrede + " " + nachname + ".";
+    }
+
+    var eyebrow = kurzDatum(ablauf);
+    setText("eyebrow", eyebrow
+      ? "Persönliche Nachricht · gültig bis " + eyebrow
+      : "Persönliche Nachricht");
+
+    setText("v-beginn", beginn);
+    setText("v-produkt", produkt);
+    setText("v-ablauf", langDatum(ablauf));
+    setText("v-jahre", jahre);
+    setText("v-schaeden", schaeden);
+    setText("v-rabatt", "−" + String(rabatt).replace(/^[-−]/, "") + "%");
+  })();
+</script>
+</body>
+</html>
