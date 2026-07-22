@@ -1,2 +1,3 @@
-aufbereitete_kunden.csv
+ausgabe/
 __pycache__/
+*.pyc

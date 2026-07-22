@@ -2,124 +2,187 @@
 """
 prototyp_pipeline_v2.py
 
-Prototyp einer einfachen Kundendaten-Pipeline.
+Prototyp einer Versicherungs-Retention-Pipeline.
 
-Ablauf:
-    1. CSV einlesen (beispiel_kunden.csv aus DEMSELBEN Ordner wie dieses Skript)
-    2. Datensaetze bereinigen und validieren
-    3. Einfaches Lead-Scoring + Segmentierung berechnen
-    4. Ergebnis als aufbereitete_kunden.csv schreiben + Zusammenfassung ausgeben
+Idee:
+    Kurz vor Ablauf einer Police bekommt der Kunde einen QR-Code, der zu einem
+    personalisierten (KI-)Video fuehrt. Ziel ist, den Kunden zum Verlaengern /
+    Bleiben zu bewegen.
 
-Benoetigt nur die Python-Standardbibliothek (keine Installation noetig).
+Was dieses Skript tut:
+    1. beispiel_kunden.csv einlesen (aus DEMSELBEN Ordner wie dieses Skript)
+    2. Kunden auswaehlen, deren Police in den naechsten VORLAUF_TAGE Tagen ablaeuft
+    3. Pro Kunde ein personalisiertes Anschreiben / Video-Skript erzeugen
+       - mit Claude (anthropic), falls ANTHROPIC_API_KEY gesetzt ist
+       - sonst mit einer Textvorlage (Fallback), damit der Prototyp immer laeuft
+    4. Pro Kunde einen QR-Code (PNG) erzeugen, der auf eine personalisierte
+       Video-Landingpage zeigt
+    5. Ergebnisse in ./ausgabe/ ablegen + Uebersicht als CSV schreiben
 
-Aufruf:
-    python3 prototyp_pipeline_v2.py
+Benoetigt: anthropic, qrcode[pil], requests  (siehe requirements.txt)
+Aufruf:    python3 prototyp_pipeline_v2.py
 """
 
 from __future__ import annotations
 
 import csv
-import re
+import hashlib
+import os
 import sys
 from datetime import date, datetime
 from pathlib import Path
 
+import qrcode
+
 # --- Konfiguration -----------------------------------------------------------
 
-# Dateien werden IMMER relativ zum Speicherort dieses Skripts gesucht,
-# damit Skript und CSV im selben Ordner liegen koennen.
 SKRIPT_ORDNER = Path(__file__).resolve().parent
 EINGABE_CSV = SKRIPT_ORDNER / "beispiel_kunden.csv"
-AUSGABE_CSV = SKRIPT_ORDNER / "aufbereitete_kunden.csv"
+AUSGABE_ORDNER = SKRIPT_ORDNER / "ausgabe"
+QR_ORDNER = AUSGABE_ORDNER / "qr_codes"
+SKRIPT_TEXT_ORDNER = AUSGABE_ORDNER / "anschreiben"
+UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 
-# Einfache, aber praktikable E-Mail-Pruefung.
-EMAIL_MUSTER = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+# Kunde bekommt Post, wenn die Police in den naechsten N Tagen ablaeuft.
+VORLAUF_TAGE = 60
 
-# Bezugsdatum fuer die "Aktualitaet des letzten Kontakts".
+# Basis-URL der personalisierten Video-Landingpage. {token} wird pro Kunde ersetzt.
+# In der Produktion: eigene Domain + echte Landingpage/Video-Plattform.
+VIDEO_BASIS_URL = "https://retention.example-versicherung.de/v/{token}"
+
+# Name des Absenders fuer die Anschreiben (Platzhalter).
+ABSENDER = "Beispiel Versicherung AG"
+
+# Bezugsdatum ("heute").
 HEUTE = date(2026, 7, 22)
+
+# Claude-Modell fuer die Skript-Generierung.
+CLAUDE_MODELL = "claude-opus-4-8"
 
 
 # --- Hilfsfunktionen ---------------------------------------------------------
 
-def bereinige_text(wert: str) -> str:
-    """Entfernt umschliessende Leerzeichen und doppelte Innen-Leerzeichen."""
-    if wert is None:
-        return ""
-    return re.sub(r"\s+", " ", wert).strip()
-
-
-def normalisiere_email(wert: str) -> str:
-    """E-Mail auf Kleinbuchstaben normalisieren und getrimmt zurueckgeben."""
-    return bereinige_text(wert).lower()
-
-
-def ist_gueltige_email(wert: str) -> bool:
-    return bool(EMAIL_MUSTER.match(wert))
-
-
-def parse_umsatz(wert: str) -> float:
-    """Umsatz als Zahl parsen; ungueltige/leere Werte werden zu 0.0."""
-    wert = bereinige_text(wert).replace(".", "").replace(",", ".")
-    try:
-        return max(0.0, float(wert))
-    except ValueError:
-        return 0.0
-
-
 def parse_datum(wert: str):
-    """Datum im Format YYYY-MM-TT parsen; bei Fehler None."""
-    wert = bereinige_text(wert)
     try:
-        return datetime.strptime(wert, "%Y-%m-%d").date()
-    except ValueError:
+        return datetime.strptime(wert.strip(), "%Y-%m-%d").date()
+    except (ValueError, AttributeError):
         return None
 
 
-def tage_seit(kontakt: date | None) -> int | None:
-    if kontakt is None:
+def video_token(kunde: dict) -> str:
+    """Stabiler, nicht erratbarer Token pro Kunde/Police fuer die Video-URL."""
+    roh = f"{kunde['kunden_id']}|{kunde['police_nr']}".encode("utf-8")
+    return hashlib.sha256(roh).hexdigest()[:16]
+
+
+def video_url(kunde: dict) -> str:
+    return VIDEO_BASIS_URL.format(token=video_token(kunde))
+
+
+# --- Anschreiben / Video-Skript ---------------------------------------------
+
+def anschreiben_vorlage(kunde: dict, tage_bis_ablauf: int) -> str:
+    """Fallback-Text ohne KI, damit die Pipeline immer ein Ergebnis liefert."""
+    return (
+        f"Guten Tag {kunde['vorname']} {kunde['nachname']},\n\n"
+        f"Ihre {kunde['versicherungsart']} (Police {kunde['police_nr']}) "
+        f"laeuft in {tage_bis_ablauf} Tagen am {kunde['ablaufdatum']} aus.\n\n"
+        f"Wir wuerden Sie gerne weiter begleiten. In einem kurzen, persoenlichen "
+        f"Video haben wir zusammengefasst, welche Vorteile Ihr Schutz Ihnen bietet "
+        f"und wie einfach die Verlaengerung ist. Scannen Sie dazu einfach den "
+        f"beigefuegten QR-Code.\n\n"
+        f"Freundliche Gruesse\n{ABSENDER}"
+    )
+
+
+def anschreiben_via_claude(kunde: dict, tage_bis_ablauf: int) -> str | None:
+    """
+    Erzeugt ein personalisiertes Anschreiben / Video-Skript mit Claude.
+    Gibt None zurueck, wenn kein API-Key vorhanden ist oder ein Fehler auftritt
+    (dann greift die Vorlage).
+    """
+    if not os.environ.get("ANTHROPIC_API_KEY"):
         return None
-    return (HEUTE - kontakt).days
+
+    try:
+        import anthropic
+    except ImportError:
+        return None
+
+    system = (
+        "Du bist Texter:in einer deutschen Versicherung und schreibst kurze, "
+        "warme, seriöse Anschreiben zur Vertragsverlängerung. Kein Druck, keine "
+        "übertriebenen Versprechen, DSGVO-konform, per 'Sie'. Maximal 120 Wörter. "
+        "Beziehe dich darauf, dass ein persönliches Video per QR-Code bereitsteht."
+    )
+    prompt = (
+        f"Kunde: {kunde['vorname']} {kunde['nachname']}\n"
+        f"Produkt: {kunde['versicherungsart']}\n"
+        f"Police: {kunde['police_nr']}\n"
+        f"Ablaufdatum: {kunde['ablaufdatum']} (in {tage_bis_ablauf} Tagen)\n"
+        f"Absender: {ABSENDER}\n\n"
+        "Schreibe das Anschreiben. Nur der Brieftext, keine Betreffzeile."
+    )
+
+    try:
+        client = anthropic.Anthropic()
+        antwort = client.messages.create(
+            model=CLAUDE_MODELL,
+            max_tokens=400,
+            output_config={"effort": "low"},  # einfacher, hochvolumiger Task
+            system=system,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return "".join(b.text for b in antwort.content if b.type == "text").strip()
+    except Exception as e:  # Netzwerk/Auth/Rate-Limit -> Vorlage nutzen
+        print(f"  ! Claude nicht verfuegbar ({e.__class__.__name__}), nutze Vorlage",
+              file=sys.stderr)
+        return None
 
 
-# --- Scoring / Segmentierung -------------------------------------------------
+def erzeuge_anschreiben(kunde: dict, tage_bis_ablauf: int) -> tuple[str, str]:
+    """Gibt (text, quelle) zurueck; quelle ist 'claude' oder 'vorlage'."""
+    text = anschreiben_via_claude(kunde, tage_bis_ablauf)
+    if text:
+        return text, "claude"
+    return anschreiben_vorlage(kunde, tage_bis_ablauf), "vorlage"
 
-def berechne_score(umsatz: float, tage: int | None, status: str,
-                   email_ok: bool) -> int:
+
+# --- QR-Code -----------------------------------------------------------------
+
+def erzeuge_qr_code(url: str, ziel: Path) -> None:
+    qr = qrcode.QRCode(
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    bild = qr.make_image(fill_color="black", back_color="white")
+    bild.save(ziel)
+
+
+# --- (Optional) Video-Generierung ueber HTTP ---------------------------------
+
+def video_anfordern(kunde: dict, skript: str) -> str | None:
     """
-    Sehr einfaches Lead-Scoring (0-100).
+    STUB: Hier wuerde ein KI-Video-Dienst per HTTP (requests) angesprochen,
+    der aus dem Skript ein personalisiertes Video erzeugt und eine URL liefert.
 
-    - Umsatz: bis zu 50 Punkte (>= 200.000 EUR = voll)
-    - Aktualitaet: bis zu 30 Punkte (Kontakt in den letzten 30 Tagen = voll)
-    - Status aktiv: 15 Punkte
-    - Gueltige E-Mail (erreichbar): 5 Punkte
+    Absichtlich nicht aktiv, weil kein echter Endpunkt konfiguriert ist.
+    Beispielhafter Aufbau:
+
+        import requests
+        resp = requests.post(
+            os.environ["VIDEO_API_URL"],
+            headers={"Authorization": f"Bearer {os.environ['VIDEO_API_KEY']}"},
+            json={"script": skript, "kunde_id": kunde["kunden_id"]},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        return resp.json()["video_url"]
     """
-    score = 0.0
-
-    # Umsatzanteil
-    score += min(umsatz / 200_000.0, 1.0) * 50
-
-    # Aktualitaetsanteil (linear ueber ein Jahr abfallend)
-    if tage is not None:
-        aktualitaet = max(0.0, 1.0 - tage / 365.0)
-        score += aktualitaet * 30
-
-    # Status
-    if status == "aktiv":
-        score += 15
-
-    # Erreichbarkeit
-    if email_ok:
-        score += 5
-
-    return round(min(score, 100.0))
-
-
-def segment_fuer_score(score: int) -> str:
-    if score >= 70:
-        return "A - Hochwertig"
-    if score >= 40:
-        return "B - Mittel"
-    return "C - Niedrig"
+    return None
 
 
 # --- Pipeline ----------------------------------------------------------------
@@ -134,96 +197,77 @@ def lade_kunden(pfad: Path) -> list[dict]:
         return list(csv.DictReader(f))
 
 
-def verarbeite(rohdaten: list[dict]) -> list[dict]:
-    ergebnis = []
-    for zeile in rohdaten:
-        email = normalisiere_email(zeile.get("email", ""))
-        email_ok = ist_gueltige_email(email)
-        umsatz = parse_umsatz(zeile.get("umsatz_eur", ""))
-        kontakt = parse_datum(zeile.get("letzter_kontakt", ""))
-        tage = tage_seit(kontakt)
-        status = bereinige_text(zeile.get("status", "")).lower()
-
-        score = berechne_score(umsatz, tage, status, email_ok)
-
-        # Datenqualitaets-Hinweise sammeln
-        hinweise = []
-        if not email:
-            hinweise.append("email fehlt")
-        elif not email_ok:
-            hinweise.append("email ungueltig")
-        if not bereinige_text(zeile.get("firma", "")):
-            hinweise.append("firma fehlt")
-        if kontakt is None:
-            hinweise.append("kontaktdatum ungueltig")
-
-        ergebnis.append({
-            "kunden_id": bereinige_text(zeile.get("kunden_id", "")),
-            "vorname": bereinige_text(zeile.get("vorname", "")),
-            "nachname": bereinige_text(zeile.get("nachname", "")),
-            "email": email,
-            "email_gueltig": "ja" if email_ok else "nein",
-            "firma": bereinige_text(zeile.get("firma", "")),
-            "branche": bereinige_text(zeile.get("branche", "")),
-            "land": bereinige_text(zeile.get("land", "")).upper(),
-            "umsatz_eur": f"{umsatz:.2f}",
-            "tage_seit_kontakt": "" if tage is None else str(tage),
-            "status": status,
-            "score": str(score),
-            "segment": segment_fuer_score(score),
-            "hinweise": "; ".join(hinweise),
-        })
-
-    # Nach Score absteigend sortieren (beste Leads zuerst)
-    ergebnis.sort(key=lambda d: int(d["score"]), reverse=True)
-    return ergebnis
-
-
-def schreibe_ergebnis(pfad: Path, daten: list[dict]) -> None:
-    if not daten:
-        return
-    with pfad.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=list(daten[0].keys()))
-        writer.writeheader()
-        writer.writerows(daten)
-
-
-def drucke_zusammenfassung(daten: list[dict]) -> None:
-    gesamt = len(daten)
-    segmente = {"A - Hochwertig": 0, "B - Mittel": 0, "C - Niedrig": 0}
-    mit_problemen = 0
-    for d in daten:
-        segmente[d["segment"]] = segmente.get(d["segment"], 0) + 1
-        if d["hinweise"]:
-            mit_problemen += 1
-
-    print("=" * 52)
-    print("  ZUSAMMENFASSUNG")
-    print("=" * 52)
-    print(f"  Verarbeitete Kunden : {gesamt}")
-    for name, anzahl in segmente.items():
-        print(f"  Segment {name:15s}: {anzahl}")
-    print(f"  Mit Datenhinweisen  : {mit_problemen}")
-    print("-" * 52)
-    print("  Top 3 Leads:")
-    for d in daten[:3]:
-        print(f"    #{d['kunden_id']:>5} {d['vorname']} {d['nachname']:12s} "
-              f"Score {d['score']:>3}  ({d['segment']})")
-    print("=" * 52)
+def faellige_kunden(kunden: list[dict]) -> list[dict]:
+    """Kunden, deren Police in den naechsten VORLAUF_TAGE Tagen ablaeuft."""
+    treffer = []
+    for kunde in kunden:
+        if kunde.get("status", "").strip().lower() == "gekuendigt":
+            continue
+        ablauf = parse_datum(kunde.get("ablaufdatum", ""))
+        if ablauf is None:
+            continue
+        tage = (ablauf - HEUTE).days
+        if 0 <= tage <= VORLAUF_TAGE:
+            kunde["_tage_bis_ablauf"] = tage
+            treffer.append(kunde)
+    treffer.sort(key=lambda k: k["_tage_bis_ablauf"])
+    return treffer
 
 
 def main() -> int:
     print(f"Lese Eingabe: {EINGABE_CSV}")
     try:
-        rohdaten = lade_kunden(EINGABE_CSV)
+        kunden = lade_kunden(EINGABE_CSV)
     except FileNotFoundError as e:
         print(f"FEHLER: {e}", file=sys.stderr)
         return 1
 
-    daten = verarbeite(rohdaten)
-    schreibe_ergebnis(AUSGABE_CSV, daten)
-    print(f"Schreibe Ausgabe: {AUSGABE_CSV}")
-    drucke_zusammenfassung(daten)
+    faellig = faellige_kunden(kunden)
+    print(f"{len(kunden)} Kunden gelesen, {len(faellig)} faellig "
+          f"(Ablauf in <= {VORLAUF_TAGE} Tagen).")
+
+    QR_ORDNER.mkdir(parents=True, exist_ok=True)
+    SKRIPT_TEXT_ORDNER.mkdir(parents=True, exist_ok=True)
+
+    uebersicht = []
+    for kunde in faellig:
+        tage = kunde["_tage_bis_ablauf"]
+        url = video_url(kunde)
+
+        text, quelle = erzeuge_anschreiben(kunde, tage)
+
+        basis = f"{kunde['kunden_id']}_{kunde['nachname']}"
+        qr_pfad = QR_ORDNER / f"{basis}.png"
+        txt_pfad = SKRIPT_TEXT_ORDNER / f"{basis}.txt"
+
+        erzeuge_qr_code(url, qr_pfad)
+        txt_pfad.write_text(text + "\n", encoding="utf-8")
+
+        print(f"  #{kunde['kunden_id']} {kunde['vorname']} {kunde['nachname']:10s} "
+              f"Ablauf in {tage:3d} T  [{quelle}]  -> {qr_pfad.name}")
+
+        uebersicht.append({
+            "kunden_id": kunde["kunden_id"],
+            "name": f"{kunde['vorname']} {kunde['nachname']}",
+            "email": kunde["email"],
+            "versicherungsart": kunde["versicherungsart"],
+            "police_nr": kunde["police_nr"],
+            "ablaufdatum": kunde["ablaufdatum"],
+            "tage_bis_ablauf": tage,
+            "video_url": url,
+            "qr_datei": str(qr_pfad.relative_to(SKRIPT_ORDNER)),
+            "anschreiben_datei": str(txt_pfad.relative_to(SKRIPT_ORDNER)),
+            "text_quelle": quelle,
+        })
+
+    if uebersicht:
+        with UEBERSICHT_CSV.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=list(uebersicht[0].keys()))
+            writer.writeheader()
+            writer.writerows(uebersicht)
+        print(f"Uebersicht geschrieben: {UEBERSICHT_CSV}")
+
+    print("Fertig.")
     return 0
 
 
