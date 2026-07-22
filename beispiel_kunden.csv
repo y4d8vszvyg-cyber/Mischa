@@ -1,0 +1,11 @@
+kunden_id,vorname,nachname,email,firma,branche,land,umsatz_eur,letzter_kontakt,status
+1001, Anna , Schmidt,Anna.Schmidt@example.com,Muster GmbH,Handel,DE,125000,2026-05-14,aktiv
+1002,Bjoern,Meyer,bjoern.meyer@example.de, Nordwind AG ,Logistik,DE,48000,2026-01-09,aktiv
+1003,Clara,Fischer,clara.fischer[at]example.com,Fischer & Co,Beratung,AT,0,2025-11-02,inaktiv
+1004,David,Weber,d.weber@example.org,Weber Solutions,IT,CH,312000,2026-06-30,aktiv
+1005, Eva,Wagner,,Wagner Handels KG,Handel,DE,15000,2025-08-21,aktiv
+1006,Felix,Becker,felix.becker@example.com,Becker Bau,Bau,DE,87500,2026-04-03,aktiv
+1007,Greta,Hoffmann,greta.hoffmann@example.com,,Beratung,DE,0,2024-12-15,inaktiv
+1008,Hans,Schulz,hans.schulz@example.com,Schulz Logistik GmbH,Logistik,DE,205000,2026-07-01,aktiv
+1009,Ida,Koch,ida.koch@example.com,Koch IT Services,IT,AT,63000,2026-02-18,aktiv
+1010,Jonas,Bauer,JONAS.BAUER@EXAMPLE.COM, Bauer Consulting ,Beratung,DE,178000,2026-06-11,aktiv
