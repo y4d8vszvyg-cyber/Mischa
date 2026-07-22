@@ -46,10 +46,10 @@ UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 VORLAUF_TAGE = 60
 
 # Basis-URL der gehosteten Landingpage (echte, per DNS aufloesbare Domain).
-# GitHub Pages serviert index.html aus diesem Repo. Die Kundendaten werden von
-# video_url() als Query-Parameter angehaengt; die Seite liest sie aus.
-# In der Produktion durch die eigene Domain/Video-Plattform ersetzen.
-VIDEO_BASIS_URL = "https://y4d8vszvyg-cyber.github.io/Mischa/"
+# GitHub Pages serviert index.html aus diesem Repo unter der eigenen Domain
+# (siehe CNAME). Die Kundendaten werden von video_url() als Query-Parameter
+# angehaengt; die Seite liest sie aus.
+VIDEO_BASIS_URL = "https://yellowthell.org/"
 
 # Name des Absenders fuer die Anschreiben (Platzhalter).
 ABSENDER = "Beispiel Versicherung AG"
