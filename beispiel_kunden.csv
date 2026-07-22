@@ -1,0 +1,4 @@
+kunden_id,anrede,nachname,vertragsbeginn_jahr,vertragsart,schadensfaelle,neuer_beitrag_rabatt_prozent,vertragsablauf
+K-10234,Herr,Weber,2009,Lebensversicherung,0,12,2026-09-30
+K-10871,Frau,Schulz,2015,Hausratversicherung,1,8,2026-10-15
+K-11002,Herr,Krause,2011,Rechtsschutzversicherung,0,10,2026-11-02
