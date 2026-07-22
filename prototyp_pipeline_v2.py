@@ -93,6 +93,10 @@ def video_url(kunde: dict) -> str:
         "s": kunde.get("schadensfaelle", ""),  # Schadensfaelle
         "r": kunde.get("rabatt_prozent", ""),  # Rabatt in Prozent
     }
+    # Video-URL (z. B. HeyGen) nur anhaengen, wenn vorhanden.
+    video = kunde.get("video_url", "").strip()
+    if video:
+        params["v"] = video
     return f"{VIDEO_BASIS_URL}?{urlencode(params)}"
 
 

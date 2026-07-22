@@ -265,7 +265,7 @@
         <div class="avatar-ring">
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-3.3 3.6-6 8-6s8 2.7 8 6" stroke="#d9ae74" stroke-width="1.4"/></svg>
         </div>
-        <button class="play-btn" aria-label="Video abspielen">
+        <button class="play-btn" id="play" aria-label="Video abspielen">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M6 4l10 6-10 6V4z" fill="#1a1206"/></svg>
         </button>
         <div class="caption-name">Ihre persönliche Nachricht</div>
@@ -355,6 +355,19 @@
     setText("v-jahre", jahre);
     setText("v-schaeden", schaeden);
     setText("v-rabatt", "−" + String(rabatt).replace(/^[-−]/, "") + "%");
+
+    // Video-Link (z. B. HeyGen) aus dem Parameter "v"; Fallback = Demo-Video.
+    var video = val("v", "https://app.heygen.com/videos/kunden-video-herr-weber-lebensversicherung-11ffbe2efa0c491ea1536cef0dc31fcd");
+    function openVideo() {
+      if (video) window.open(video, "_blank", "noopener");
+    }
+    var playBtn = document.getElementById("play");
+    if (playBtn) playBtn.addEventListener("click", openVideo);
+    var frame = document.querySelector(".video-frame");
+    if (frame) {
+      frame.style.cursor = "pointer";
+      frame.addEventListener("click", openVideo);
+    }
   })();
 </script>
 </body>
