@@ -45,10 +45,11 @@ UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 # Kunde bekommt Post, wenn die Police in den naechsten N Tagen ablaeuft.
 VORLAUF_TAGE = 60
 
-# Basis-URL der gehosteten Landingpage. Die Kundendaten werden von video_url()
-# als Query-Parameter angehaengt; die Seite liest sie aus und personalisiert sich.
+# Basis-URL der gehosteten Landingpage (echte, per DNS aufloesbare Domain).
+# GitHub Pages serviert index.html aus diesem Repo. Die Kundendaten werden von
+# video_url() als Query-Parameter angehaengt; die Seite liest sie aus.
 # In der Produktion durch die eigene Domain/Video-Plattform ersetzen.
-VIDEO_BASIS_URL = "https://claude.ai/code/artifact/7d26ca7f-b0bd-4fcf-89d1-c2ae45d0cca7"
+VIDEO_BASIS_URL = "https://y4d8vszvyg-cyber.github.io/Mischa/"
 
 # Name des Absenders fuer die Anschreiben (Platzhalter).
 ABSENDER = "Beispiel Versicherung AG"
