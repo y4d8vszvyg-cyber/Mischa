@@ -45,8 +45,11 @@ UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 VORLAUF_TAGE = 60
 
 # Basis-URL der personalisierten Video-Landingpage. {token} wird pro Kunde ersetzt.
-# In der Produktion: eigene Domain + echte Landingpage/Video-Plattform.
-VIDEO_BASIS_URL = "https://retention.example-versicherung.de/v/{token}"
+# Aktuell: gehostete Demo-Landingpage (Artifact). In der Produktion durch die
+# eigene Domain/Video-Plattform ersetzen.
+VIDEO_BASIS_URL = (
+    "https://claude.ai/code/artifact/7d26ca7f-b0bd-4fcf-89d1-c2ae45d0cca7?k={token}"
+)
 
 # Name des Absenders fuer die Anschreiben (Platzhalter).
 ABSENDER = "Beispiel Versicherung AG"
