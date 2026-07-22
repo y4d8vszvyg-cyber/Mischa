@@ -29,6 +29,7 @@ import hashlib
 import sys
 from datetime import date, datetime
 from pathlib import Path
+from urllib.parse import urlencode
 
 import qrcode
 
@@ -44,12 +45,10 @@ UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 # Kunde bekommt Post, wenn die Police in den naechsten N Tagen ablaeuft.
 VORLAUF_TAGE = 60
 
-# Basis-URL der personalisierten Video-Landingpage. {token} wird pro Kunde ersetzt.
-# Aktuell: gehostete Demo-Landingpage (Artifact). In der Produktion durch die
-# eigene Domain/Video-Plattform ersetzen.
-VIDEO_BASIS_URL = (
-    "https://claude.ai/code/artifact/7d26ca7f-b0bd-4fcf-89d1-c2ae45d0cca7?k={token}"
-)
+# Basis-URL der gehosteten Landingpage. Die Kundendaten werden von video_url()
+# als Query-Parameter angehaengt; die Seite liest sie aus und personalisiert sich.
+# In der Produktion durch die eigene Domain/Video-Plattform ersetzen.
+VIDEO_BASIS_URL = "https://claude.ai/code/artifact/7d26ca7f-b0bd-4fcf-89d1-c2ae45d0cca7"
 
 # Name des Absenders fuer die Anschreiben (Platzhalter).
 ABSENDER = "Beispiel Versicherung AG"
@@ -73,8 +72,27 @@ def video_token(kunde: dict) -> str:
     return hashlib.sha256(roh).hexdigest()[:16]
 
 
+def jahre_vertragstreue(kunde: dict) -> int:
+    try:
+        return max(0, HEUTE.year - int(kunde.get("vertragsbeginn", "")))
+    except ValueError:
+        return 0
+
+
 def video_url(kunde: dict) -> str:
-    return VIDEO_BASIS_URL.format(token=video_token(kunde))
+    """Landingpage-URL mit Kundendaten als Parameter (die Seite liest sie aus)."""
+    params = {
+        "k": video_token(kunde),              # Token (Tracking/Eindeutigkeit)
+        "a": kunde.get("anrede", ""),          # Anrede (Herr/Frau)
+        "n": kunde.get("nachname", ""),        # Nachname
+        "p": kunde.get("versicherungsart", ""),  # Produkt
+        "b": kunde.get("vertragsbeginn", ""),  # Vertragsbeginn (Jahr)
+        "e": kunde.get("ablaufdatum", ""),     # Ablaufdatum (YYYY-MM-DD)
+        "j": str(jahre_vertragstreue(kunde)),  # Jahre Vertragstreue
+        "s": kunde.get("schadensfaelle", ""),  # Schadensfaelle
+        "r": kunde.get("rabatt_prozent", ""),  # Rabatt in Prozent
+    }
+    return f"{VIDEO_BASIS_URL}?{urlencode(params)}"
 
 
 # --- Anschreiben / Video-Skript ---------------------------------------------
