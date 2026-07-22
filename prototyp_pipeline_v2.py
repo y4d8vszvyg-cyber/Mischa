@@ -45,6 +45,11 @@ UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 # Kunde bekommt Post, wenn die Police in den naechsten N Tagen ablaeuft.
 VORLAUF_TAGE = 60
 
+# Versionskennzeichen in der URL (Cache-Buster). Bei jeder Aenderung an der
+# Landingpage hochzaehlen, damit gescannte QR-Codes die frische Seite laden
+# und nicht die im Browser zwischengespeicherte alte Version.
+SEITEN_VERSION = "4"
+
 # Basis-URL der gehosteten Landingpage: kostenlose GitHub-Pages-Adresse
 # (gehoert GitHub, braucht keine eigene Domain/DNS). Funktioniert erst, wenn
 # unter Settings -> Pages KEINE Custom Domain mehr eingetragen ist.
@@ -83,6 +88,7 @@ def jahre_vertragstreue(kunde: dict) -> int:
 def video_url(kunde: dict) -> str:
     """Landingpage-URL mit Kundendaten als Parameter (die Seite liest sie aus)."""
     params = {
+        "ver": SEITEN_VERSION,                 # Cache-Buster (frische Seite laden)
         "k": video_token(kunde),              # Token (Tracking/Eindeutigkeit)
         "a": kunde.get("anrede", ""),          # Anrede (Herr/Frau)
         "n": kunde.get("nachname", ""),        # Nachname
