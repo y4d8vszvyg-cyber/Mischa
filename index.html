@@ -359,7 +359,9 @@
     // Video-Link (z. B. HeyGen) aus dem Parameter "v"; Fallback = Demo-Video.
     var video = val("v", "https://app.heygen.com/videos/kunden-video-herr-weber-lebensversicherung-11ffbe2efa0c491ea1536cef0dc31fcd");
     function openVideo() {
-      if (video) window.open(video, "_blank", "noopener");
+      if (!video) return;
+      var w = window.open(video, "_blank", "noopener");
+      if (!w) window.location.href = video; // Popup geblockt -> gleicher Tab
     }
     var playBtn = document.getElementById("play");
     if (playBtn) playBtn.addEventListener("click", openVideo);
