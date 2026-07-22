@@ -45,11 +45,11 @@ UEBERSICHT_CSV = AUSGABE_ORDNER / "versand_uebersicht.csv"
 # Kunde bekommt Post, wenn die Police in den naechsten N Tagen ablaeuft.
 VORLAUF_TAGE = 60
 
-# Basis-URL der gehosteten Landingpage (echte, per DNS aufloesbare Domain).
-# GitHub Pages serviert index.html aus diesem Repo unter der eigenen Domain
-# (siehe CNAME). Die Kundendaten werden von video_url() als Query-Parameter
-# angehaengt; die Seite liest sie aus.
-VIDEO_BASIS_URL = "https://yellowthell.org/"
+# Basis-URL der gehosteten Landingpage: kostenlose GitHub-Pages-Adresse
+# (gehoert GitHub, braucht keine eigene Domain/DNS). Funktioniert erst, wenn
+# unter Settings -> Pages KEINE Custom Domain mehr eingetragen ist.
+# Kundendaten werden als Query-Parameter angehaengt.
+VIDEO_BASIS_URL = "https://y4d8vszvyg-cyber.github.io/Mischa/"
 
 # Name des Absenders fuer die Anschreiben (Platzhalter).
 ABSENDER = "Beispiel Versicherung AG"
