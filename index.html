@@ -4,238 +4,78 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ronkin&amp;co – Kundenbindung mit persönlichem KI-Video</title>
-<meta name="description" content="Ronkin&co hilft Versicherungen und Maklern, Bestandskunden vor Vertragsablauf mit einem persönlichen KI-Video zurückzugewinnen – per QR-Code, ohne App.">
+<meta name="description" content="Ronkin&co hilft Versicherungen und Maklern, Bestandskunden vor Vertragsablauf mit einem persönlichen KI-Video zurückzugewinnen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#631f2a; --ink-2:#5a1b24;
-    --gold:#ecc987; --gold-bright:#f3d7a2; --brass:#d9ae74;
-    --line:rgba(236,201,135,0.18);
-    --muted:rgba(236,201,135,0.66);
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{margin:0; background:var(--ink); color:var(--gold);
-    font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; line-height:1.65;}
-  a{color:inherit;}
-  .wrap{max-width:960px; margin:0 auto; padding:0 26px;}
-  h1,h2,h3{font-family:'Fraunces',serif; font-weight:500; color:var(--gold-bright); margin:0;}
-
-  /* Nav */
-  nav{border-bottom:1px solid var(--line);}
-  .nav-in{display:flex; align-items:center; justify-content:space-between; height:70px;}
-  .logo{font-family:'Fraunces',serif; font-size:22px; color:var(--gold-bright); text-decoration:none;}
-  .logo .amp{color:var(--brass); font-style:italic;}
-  .nav-links{display:flex; align-items:center; gap:30px;}
-  .nav-links a{font-size:14px; color:var(--muted); text-decoration:none;}
-  .nav-links a:hover{color:var(--gold-bright);}
-  @media(max-width:680px){ .nav-links a{display:none;} }
-
-  .btn{display:inline-block; padding:12px 22px; border-radius:2px; font-size:14px;
-    font-weight:500; text-decoration:none; cursor:pointer; border:1px solid transparent; transition:.18s;}
-  .btn-primary{background:var(--brass); color:#3a1206;}
-  .btn-primary:hover{background:var(--gold-bright);}
-  .btn-line{border-color:rgba(236,201,135,0.35); color:var(--gold-bright);}
-  .btn-line:hover{border-color:var(--gold-bright);}
-
-  /* Hero */
-  .hero{padding:96px 0 78px;}
-  .kicker{font-size:12.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--brass); margin-bottom:26px;}
-  .hero h1{font-size:clamp(36px,6.2vw,62px); line-height:1.06; letter-spacing:-0.01em; max-width:15ch; text-wrap:balance;}
-  .hero h1 em{font-style:italic; color:var(--brass);}
-  .hero p{font-size:19px; color:var(--muted); max-width:50ch; margin:26px 0 34px;}
-  .hero-cta{display:flex; gap:16px; flex-wrap:wrap; align-items:center;}
-  .demo-note{font-size:13px; color:var(--muted); margin-top:16px;}
-
-  /* Section scaffolding */
-  section{padding:64px 0; border-top:1px solid var(--line);}
-  section.alt{background:var(--ink-2);}
-  .head{display:grid; grid-template-columns:170px 1fr; gap:34px; align-items:baseline;}
-  .head .label{font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--brass);}
-  .head h2{font-size:clamp(25px,3.4vw,33px); line-height:1.14; max-width:20ch; text-wrap:balance;}
-  .head .lead{color:var(--muted); font-size:16px; margin:14px 0 0; max-width:56ch;}
-  @media(max-width:680px){ .head{grid-template-columns:1fr; gap:10px;} }
-
-  /* Definition rows (Leistungen / Ablauf) */
-  .rows{margin-top:14px;}
-  .row{display:grid; grid-template-columns:170px 1fr; gap:34px; padding:24px 0; border-top:1px solid var(--line);}
-  .row:first-child{border-top:none;}
-  .row .t{font-family:'Fraunces',serif; font-size:20px; color:var(--gold-bright); line-height:1.25;}
-  .row .d{margin:0; color:var(--muted); font-size:15.5px;}
-  @media(max-width:680px){ .row{grid-template-columns:1fr; gap:6px; padding:20px 0;} }
-
-  .audience{font-family:'Fraunces',serif; font-size:clamp(18px,2.4vw,22px); color:var(--gold-bright);
-    line-height:1.5; margin:22px 0 0; max-width:40ch;}
-  .audience .sep{color:var(--brass);}
-
-  /* Contact */
-  .contact-grid{display:grid; grid-template-columns:1fr 300px; gap:48px; align-items:start; margin-top:14px;}
-  @media(max-width:720px){ .contact-grid{grid-template-columns:1fr; gap:34px;} }
-  form{display:flex; flex-direction:column; gap:22px;}
-  .field label{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:8px;}
-  .field input, .field textarea{width:100%; padding:9px 2px; border:none; border-bottom:1px solid var(--line);
-    background:transparent; color:var(--gold-bright); font-size:16px; font-family:'Inter',sans-serif;}
-  .field input:focus, .field textarea:focus{outline:none; border-bottom-color:var(--brass);}
-  .field textarea{min-height:96px; resize:vertical;}
-  .aside p{margin:0 0 20px; color:var(--muted); font-size:15px; line-height:1.6;}
-  .aside .k{display:block; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--brass); margin-bottom:3px;}
-  .aside a{color:var(--gold-bright); text-decoration:none; border-bottom:1px solid rgba(236,201,135,0.3);}
-
-  footer{border-top:1px solid var(--line); padding:28px 0;}
-  .foot-in{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:13px;}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body id="top">
 
 <nav>
   <div class="wrap nav-in">
-    <a class="logo" href="#top">Ronkin<span class="amp">&amp;</span>co</a>
+    <a class="logo" href="index.html">Ronkin<span class="amp">&amp;</span>co</a>
     <div class="nav-links">
-      <a href="#leistungen">Leistungen</a>
-      <a href="#ablauf">Ablauf</a>
-      <a href="#kontakt">Kontakt</a>
+      <a href="leistungen.html">Leistungen</a>
+      <a href="ablauf.html">Ablauf</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a class="btn btn-primary nav-cta" href="kontakt.html">Kontakt</a>
     </div>
   </div>
 </nav>
 
-<header class="hero">
+<main class="home">
   <div class="wrap">
     <div class="kicker">Kundenbindung für Versicherungen &amp; Makler</div>
     <h1>Kurz vor Ablauf entscheidet sich, ob ein Kunde <em>bleibt</em>.</h1>
-    <p>Wir gewinnen Ihre Bestandskunden mit einem persönlichen KI-Video zurück – zugestellt
-       per QR-Code, mit einem Klick zur Verlängerung. Ohne App, ohne IT-Projekt.</p>
-    <div class="hero-cta">
-      <a class="btn btn-primary" href="#kontakt">Pilot anfragen</a>
-      <a class="btn btn-line" href="https://y4d8vszvyg-cyber.github.io/Mischa/kunde.html?ver=18&amp;s=ELaQp2cBk6ucsDvK26KkaA&amp;iv=mYInTKWCKKWYNJgK&amp;d=2UxkWRzNhDsN8v9LOAqnp27AMI7HAQTeQ2EQd2iOQHQXCg_hI2bMgMv17OokT2GnP7J93TgTRNyEhYsr5n6LDPyudautXaZSsjv3I2LAnpYGDE_qXdU05vQ_AdMEBuRWQDmRS299k0lL0Gyn7jGbW0V4APqStbGdjUSFtfkVCfiHtsifLIdM1KkCwdlUOxEsjnN86aSNNvyfVHXIf9nk-gPvNQnBg2oQCPp353lv2W0rJYdNTOj-Vu_qpH37gCFZpP05JlvKpzrWPlGMe9EDB_CDVV5a_MixGK1jR_PFBiEwKQ" target="_blank" rel="noopener">Beispiel ansehen</a>
-    </div>
-    <div class="demo-note">Beispielseite – zur Bestätigung Geburtsdatum <strong>12.03.1974</strong> eingeben.</div>
-  </div>
-</header>
+    <p class="intro">Wir gewinnen Ihre Bestandskunden mit einem persönlichen KI-Video zurück –
+       zugestellt per QR-Code, mit einem Klick zur Verlängerung. Wählen Sie, was Sie interessiert:</p>
 
-<section id="leistungen">
-  <div class="wrap">
-    <div class="head">
-      <div class="label">Was wir machen</div>
-      <div>
-        <h2>Aus einem drohenden Wechsel wird eine Verlängerung.</h2>
-        <p class="lead">Ein durchdachter Ablauf statt einer weiteren Erinnerungsmail, die niemand öffnet.</p>
-      </div>
-    </div>
-    <div class="rows">
-      <div class="row">
-        <div class="t">Persönliches Video</div>
-        <p class="d">Ein Avatar spricht jeden Kunden namentlich an und nennt seinen Vertrag – für jeden Kunden einzeln erstellt.</p>
-      </div>
-      <div class="row">
-        <div class="t">Zustellung per QR-Code</div>
-        <p class="d">Aus Brief oder E-Mail heraus gescannt. Kein Login, keine App – der Kunde ist sofort auf seiner Seite.</p>
-      </div>
-      <div class="row">
-        <div class="t">Ein Klick zur Verlängerung</div>
-        <p class="d">Direkt aus der Seite verlängern oder um Kontakt bitten. Der Weg vom Impuls zur Handlung bleibt kurz.</p>
-      </div>
-      <div class="row">
-        <div class="t">Daten bleiben geschützt</div>
-        <p class="d">Die Angaben sind verschlüsselt und werden erst nach Bestätigung des Geburtsdatums sichtbar. DSGVO-konform.</p>
-      </div>
-    </div>
+    <ul class="toc">
+      <li>
+        <a href="leistungen.html">
+          <span class="num">I</span>
+          <span><span class="t">Leistungen</span><span class="d">Was wir machen – Video, QR-Zustellung, Ein-Klick-Verlängerung, Datenschutz</span></span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </li>
+      <li>
+        <a href="ablauf.html">
+          <span class="num">II</span>
+          <span><span class="t">Ablauf</span><span class="d">So funktioniert's – von Ihrer Liste bis zum fertigen QR in drei Schritten</span></span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </li>
+      <li>
+        <a href="ueber-uns.html">
+          <span class="num">III</span>
+          <span><span class="t">Über uns</span><span class="d">Wer wir sind und woran wir glauben</span></span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://y4d8vszvyg-cyber.github.io/Mischa/kunde.html?ver=18&amp;s=ELaQp2cBk6ucsDvK26KkaA&amp;iv=mYInTKWCKKWYNJgK&amp;d=2UxkWRzNhDsN8v9LOAqnp27AMI7HAQTeQ2EQd2iOQHQXCg_hI2bMgMv17OokT2GnP7J93TgTRNyEhYsr5n6LDPyudautXaZSsjv3I2LAnpYGDE_qXdU05vQ_AdMEBuRWQDmRS299k0lL0Gyn7jGbW0V4APqStbGdjUSFtfkVCfiHtsifLIdM1KkCwdlUOxEsjnN86aSNNvyfVHXIf9nk-gPvNQnBg2oQCPp353lv2W0rJYdNTOj-Vu_qpH37gCFZpP05JlvKpzrWPlGMe9EDB_CDVV5a_MixGK1jR_PFBiEwKQ" target="_blank" rel="noopener">
+          <span class="num">IV</span>
+          <span><span class="t">Beispiel ansehen</span><span class="d">Die Kundenseite live – Geburtsdatum zur Bestätigung: 12.03.1974</span></span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </li>
+      <li>
+        <a href="kontakt.html">
+          <span class="num">V</span>
+          <span><span class="t">Kontakt</span><span class="d">Pilot anfragen oder ein Beispiel vereinbaren</span></span>
+          <span class="arrow">&#8594;</span>
+        </a>
+      </li>
+    </ul>
   </div>
-</section>
-
-<section class="alt" id="ablauf">
-  <div class="wrap">
-    <div class="head">
-      <div class="label">Ablauf</div>
-      <div>
-        <h2>Von Ihrer Liste bis zum fertigen QR – in wenigen Tagen.</h2>
-      </div>
-    </div>
-    <div class="rows">
-      <div class="row">
-        <div class="t">Schritt eins</div>
-        <p class="d">Sie geben uns eine einfache Liste ablaufender Verträge – Name, Produkt, Ablaufdatum. Mehr braucht es nicht.</p>
-      </div>
-      <div class="row">
-        <div class="t">Schritt zwei</div>
-        <p class="d">Wir erstellen pro Kunde das persönliche Video, die geschützte Seite und den fertigen QR-Code.</p>
-      </div>
-      <div class="row">
-        <div class="t">Schritt drei</div>
-        <p class="d">Der Kunde scannt, sieht sein Video und verlängert. Sie vergleichen die Quote mit einer Kontrollgruppe.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="fuer-wen">
-  <div class="wrap">
-    <div class="head">
-      <div class="label">Für wen</div>
-      <div>
-        <h2>Für alle, die Bestandskunden halten wollen.</h2>
-        <p class="lead">Am stärksten dort, wo Verträge jährlich auslaufen – etwa bei Kfz zum Stichtag. Wir starten mit einer kleinen Pilotgruppe.</p>
-      </div>
-    </div>
-    <p class="audience">Makler <span class="sep">·</span> Makler-Pools &amp; Vertriebe <span class="sep">·</span> Ausschließlichkeitsvertreter <span class="sep">·</span> InsurTechs <span class="sep">·</span> mittelständische Versicherer</p>
-  </div>
-</section>
-
-<section class="alt" id="kontakt">
-  <div class="wrap">
-    <div class="head">
-      <div class="label">Kontakt</div>
-      <div>
-        <h2>Pilot anfragen oder ein Beispiel vereinbaren.</h2>
-        <p class="lead">Schreiben Sie kurz, wer Sie sind und woran Sie denken – wir melden uns mit einem konkreten Beispiel.</p>
-      </div>
-    </div>
-    <div class="contact-grid">
-      <form id="kontakt-form">
-        <div class="field">
-          <label for="f-name">Name</label>
-          <input id="f-name" type="text" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="f-firma">Firma</label>
-          <input id="f-firma" type="text" autocomplete="organization">
-        </div>
-        <div class="field">
-          <label for="f-email">E-Mail</label>
-          <input id="f-email" type="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="f-nachricht">Nachricht</label>
-          <textarea id="f-nachricht" placeholder="Worum geht's? Z. B. Kfz-Bestand, ungefähre Anzahl Verträge."></textarea>
-        </div>
-        <button class="btn btn-primary" type="submit" style="align-self:flex-start;">Anfrage senden</button>
-      </form>
-      <div class="aside">
-        <p><span class="k">E-Mail</span><a href="mailto:ronkinco@web.de">ronkinco@web.de</a></p>
-        <p><span class="k">So läuft ein Pilot</span>Kostenlos, an einer kleinen Kundengruppe. Sie liefern nur die Liste – den Rest übernehmen wir.</p>
-      </div>
-    </div>
-  </div>
-</section>
+</main>
 
 <footer>
   <div class="wrap foot-in">
     <div>© <span id="jahr"></span> Ronkin&amp;co</div>
-    <div>Kundenbindung mit persönlichem KI-Video</div>
+    <div><a href="kontakt.html">ronkinco@web.de</a></div>
   </div>
 </footer>
-
-<script>
-  document.getElementById("jahr").textContent = new Date().getFullYear();
-  document.getElementById("kontakt-form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var g = function (id) { return document.getElementById(id).value.trim(); };
-    var name = g("f-name"), firma = g("f-firma"), email = g("f-email"), nachricht = g("f-nachricht");
-    var betreff = "Pilot-Anfrage" + (firma ? " – " + firma : "");
-    var body = "Name: " + name + "\nFirma: " + firma + "\nE-Mail: " + email + "\n\n" + nachricht + "\n";
-    window.location.href = "mailto:ronkinco@web.de?subject="
-      + encodeURIComponent(betreff) + "&body=" + encodeURIComponent(body);
-  });
-</script>
+<script>document.getElementById("jahr").textContent = new Date().getFullYear();</script>
 </body>
 </html>

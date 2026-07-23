@@ -1,0 +1,99 @@
+/* Ronkin&co — gemeinsame Styles (Bordeaux / Gold, editorial) */
+:root{
+  --ink:#631f2a; --ink-2:#5a1b24;
+  --gold:#ecc987; --gold-bright:#f3d7a2; --brass:#d9ae74;
+  --line:rgba(236,201,135,0.18);
+  --muted:rgba(236,201,135,0.66);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0; background:var(--ink); color:var(--gold);
+  font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; line-height:1.65;}
+a{color:inherit;}
+.wrap{max-width:960px; margin:0 auto; padding:0 26px;}
+h1,h2,h3{font-family:'Fraunces',serif; font-weight:500; color:var(--gold-bright); margin:0;}
+
+/* Nav */
+nav{border-bottom:1px solid var(--line);}
+.nav-in{display:flex; align-items:center; justify-content:space-between; height:70px;}
+.logo{font-family:'Fraunces',serif; font-size:22px; color:var(--gold-bright); text-decoration:none;}
+.logo .amp{color:var(--brass); font-style:italic;}
+.nav-links{display:flex; align-items:center; gap:28px;}
+.nav-links a{font-size:14px; color:var(--muted); text-decoration:none;}
+.nav-links a:hover, .nav-links a.active{color:var(--gold-bright);}
+@media(max-width:680px){ .nav-links a{display:none;} .nav-links a.nav-cta{display:inline-block;} }
+
+.btn{display:inline-block; padding:12px 22px; border-radius:2px; font-size:14px;
+  font-weight:500; text-decoration:none; cursor:pointer; border:1px solid transparent; transition:.18s;}
+.btn-primary{background:var(--brass); color:#3a1206;}
+.btn-primary:hover{background:var(--gold-bright);}
+.btn-line{border-color:rgba(236,201,135,0.35); color:var(--gold-bright);}
+.btn-line:hover{border-color:var(--gold-bright);}
+.nav-links .btn{padding:9px 16px;}
+
+/* Startseite (Inhaltsverzeichnis) */
+.home{padding:84px 0 40px;}
+.home .kicker{font-size:12.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--brass); margin-bottom:22px;}
+.home h1{font-size:clamp(34px,5.6vw,54px); line-height:1.08; letter-spacing:-0.01em; max-width:17ch; text-wrap:balance;}
+.home h1 em{font-style:italic; color:var(--brass);}
+.home .intro{font-size:18px; color:var(--muted); max-width:52ch; margin:24px 0 0;}
+
+.toc{list-style:none; margin:46px 0 30px; padding:0; border-top:1px solid var(--line);}
+.toc li{border-bottom:1px solid var(--line);}
+.toc a{display:grid; grid-template-columns:56px 1fr auto; align-items:center; gap:20px;
+  padding:24px 4px; text-decoration:none; transition:.15s;}
+.toc a:hover{padding-left:12px; background:rgba(255,255,255,0.02);}
+.toc .num{font-family:'Fraunces',serif; font-size:16px; color:var(--brass); letter-spacing:0.06em;}
+.toc .t{font-family:'Fraunces',serif; font-size:clamp(20px,2.6vw,25px); color:var(--gold-bright); line-height:1.2;}
+.toc .d{display:block; font-size:14px; color:var(--muted); margin-top:3px;}
+.toc .arrow{color:var(--brass); font-size:20px;}
+@media(max-width:560px){ .toc a{grid-template-columns:34px 1fr; } .toc .arrow{display:none;} }
+
+/* Unterseiten-Kopf */
+.page-hero{padding:70px 0 18px;}
+.page-hero .kicker{font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--brass); margin-bottom:16px;}
+.page-hero h1{font-size:clamp(30px,5vw,46px); line-height:1.08; max-width:18ch; text-wrap:balance;}
+.page-hero .lead{font-size:18px; color:var(--muted); max-width:56ch; margin:20px 0 0;}
+
+/* Abschnitte / Zeilen */
+section{padding:44px 0;}
+section.bordered{border-top:1px solid var(--line);}
+.head{display:grid; grid-template-columns:170px 1fr; gap:34px; align-items:baseline;}
+.head .label{font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--brass);}
+.head h2{font-size:clamp(23px,3.2vw,30px); line-height:1.16; max-width:22ch; text-wrap:balance;}
+@media(max-width:680px){ .head{grid-template-columns:1fr; gap:10px;} }
+
+.rows{margin-top:14px;}
+.row{display:grid; grid-template-columns:170px 1fr; gap:34px; padding:24px 0; border-top:1px solid var(--line);}
+.row:first-child{border-top:none;}
+.row .t{font-family:'Fraunces',serif; font-size:20px; color:var(--gold-bright); line-height:1.25;}
+.row .d{margin:0; color:var(--muted); font-size:15.5px;}
+@media(max-width:680px){ .row{grid-template-columns:1fr; gap:6px; padding:20px 0;} }
+
+.prose{max-width:66ch;}
+.prose p{color:var(--gold); font-size:16.5px; margin:0 0 20px;}
+.prose p.lead-p{font-size:19px; color:var(--gold-bright);}
+.values{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:24px; margin-top:14px;}
+.values .t{font-family:'Fraunces',serif; font-size:19px; color:var(--gold-bright); margin-bottom:5px;}
+.values .d{color:var(--muted); font-size:14.5px;}
+
+.audience{font-family:'Fraunces',serif; font-size:clamp(18px,2.4vw,22px); color:var(--gold-bright);
+  line-height:1.5; margin:6px 0 0; max-width:44ch;}
+.audience .sep{color:var(--brass);}
+
+/* Kontakt */
+.contact-grid{display:grid; grid-template-columns:1fr 300px; gap:48px; align-items:start; margin-top:8px;}
+@media(max-width:720px){ .contact-grid{grid-template-columns:1fr; gap:34px;} }
+form{display:flex; flex-direction:column; gap:22px;}
+.field label{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--brass); display:block; margin-bottom:8px;}
+.field input, .field textarea{width:100%; padding:9px 2px; border:none; border-bottom:1px solid var(--line);
+  background:transparent; color:var(--gold-bright); font-size:16px; font-family:'Inter',sans-serif;}
+.field input:focus, .field textarea:focus{outline:none; border-bottom-color:var(--brass);}
+.field textarea{min-height:96px; resize:vertical;}
+.aside p{margin:0 0 20px; color:var(--muted); font-size:15px; line-height:1.6;}
+.aside .k{display:block; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--brass); margin-bottom:3px;}
+.aside a{color:var(--gold-bright); text-decoration:none; border-bottom:1px solid rgba(236,201,135,0.3);}
+
+footer{border-top:1px solid var(--line); padding:28px 0; margin-top:40px;}
+.foot-in{display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:var(--muted); font-size:13px;}
+.foot-in a{text-decoration:none; border-bottom:1px solid rgba(236,201,135,0.25);}

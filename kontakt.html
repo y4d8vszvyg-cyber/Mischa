@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kontakt – Ronkin&amp;co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="index.html">Ronkin<span class="amp">&amp;</span>co</a>
+    <div class="nav-links">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="ablauf.html">Ablauf</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a href="kontakt.html" class="active">Kontakt</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="kicker">Kontakt</div>
+    <h1>Pilot anfragen oder ein Beispiel vereinbaren.</h1>
+    <p class="lead">Schreiben Sie kurz, wer Sie sind und woran Sie denken – wir melden uns mit einem konkreten Beispiel.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="contact-grid">
+      <form id="kontakt-form">
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="f-firma">Firma</label>
+          <input id="f-firma" type="text" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="f-email">E-Mail</label>
+          <input id="f-email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="f-nachricht">Nachricht</label>
+          <textarea id="f-nachricht" placeholder="Worum geht's? Z. B. Kfz-Bestand, ungefähre Anzahl Verträge."></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit" style="align-self:flex-start;">Anfrage senden</button>
+      </form>
+      <div class="aside">
+        <p><span class="k">E-Mail</span><a href="mailto:ronkinco@web.de">ronkinco@web.de</a></p>
+        <p><span class="k">So läuft ein Pilot</span>Kostenlos, an einer kleinen Kundengruppe. Sie liefern nur die Liste – den Rest übernehmen wir.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>© <span id="jahr"></span> Ronkin&amp;co</div>
+    <div><a href="index.html">Zur Startseite</a></div>
+  </div>
+</footer>
+<script>
+  document.getElementById("jahr").textContent = new Date().getFullYear();
+  document.getElementById("kontakt-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var g = function (id) { return document.getElementById(id).value.trim(); };
+    var name = g("f-name"), firma = g("f-firma"), email = g("f-email"), nachricht = g("f-nachricht");
+    var betreff = "Pilot-Anfrage" + (firma ? " – " + firma : "");
+    var body = "Name: " + name + "\nFirma: " + firma + "\nE-Mail: " + email + "\n\n" + nachricht + "\n";
+    window.location.href = "mailto:ronkinco@web.de?subject="
+      + encodeURIComponent(betreff) + "&body=" + encodeURIComponent(body);
+  });
+</script>
+</body>
+</html>

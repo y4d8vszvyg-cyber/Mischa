@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ablauf – Ronkin&amp;co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body id="top">
+
+<nav>
+  <div class="wrap nav-in">
+    <a class="logo" href="index.html">Ronkin<span class="amp">&amp;</span>co</a>
+    <div class="nav-links">
+      <a href="leistungen.html">Leistungen</a>
+      <a href="ablauf.html" class="active">Ablauf</a>
+      <a href="ueber-uns.html">Über uns</a>
+      <a class="btn btn-primary nav-cta" href="kontakt.html">Kontakt</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="kicker">Ablauf</div>
+    <h1>Von Ihrer Liste bis zum fertigen QR – in wenigen Tagen.</h1>
+    <p class="lead">Kein IT-Projekt, keine Integration. Sie liefern die Liste, wir übernehmen den Rest.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="rows">
+      <div class="row">
+        <div class="t">Schritt eins</div>
+        <p class="d">Sie geben uns eine einfache Liste ablaufender Verträge – Name, Produkt, Ablaufdatum. Mehr braucht es nicht.</p>
+      </div>
+      <div class="row">
+        <div class="t">Schritt zwei</div>
+        <p class="d">Wir erstellen pro Kunde das persönliche Video, die geschützte Seite und den fertigen QR-Code.</p>
+      </div>
+      <div class="row">
+        <div class="t">Schritt drei</div>
+        <p class="d">Der Kunde scannt, sieht sein Video und verlängert. Sie vergleichen die Quote mit einer Kontrollgruppe.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bordered">
+  <div class="wrap">
+    <div class="head">
+      <div class="label">Timing</div>
+      <div>
+        <h2>Am stärksten kurz vor dem Wechselstichtag.</h2>
+        <p class="d" style="color:var(--muted); margin-top:14px; max-width:56ch;">Bei Kfz entscheidet sich vieles vor dem 30.&nbsp;November. Wer im Sommer und Herbst startet, erreicht seine Kunden rechtzeitig – bevor der Wettbewerb es tut.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>© <span id="jahr"></span> Ronkin&amp;co</div>
+    <div><a href="kontakt.html">Pilot anfragen &#8594;</a></div>
+  </div>
+</footer>
+<script>document.getElementById("jahr").textContent = new Date().getFullYear();</script>
+</body>
+</html>
