@@ -72,21 +72,23 @@ ABSENDER = "Beispiel Versicherung AG"
 # Bezugsdatum ("heute").
 HEUTE = date(2026, 7, 22)
 
-# --- KI-Video (HeyGen) - optional, standardmaessig AUS -----------------------
-# Zum Aktivieren:
-#   1. HEYGEN_AKTIV = True setzen
+# --- KI-Video-Anbieter waehlen -----------------------------------------------
+# "heygen"    = Talking-Avatar, spricht den Kunden persoenlich an (empfohlen)
+# "higgsfield"= cineastischer Motion-Clip (spricht keinen Text)
+# None        = aus
+# Wird erst wirksam, wenn zusaetzlich der passende API-Key gesetzt ist.
+VIDEO_PROVIDER = "heygen"
+
+# --- HeyGen (Talking-Avatar) -------------------------------------------------
+# Zum Scharfschalten:
+#   1. VIDEO_PROVIDER = "heygen" (oben)
 #   2. API-Key als Umgebungsvariable setzen:  export HEYGEN_API_KEY=dein_key
-#   3. Avatar- und Voice-ID aus deinem HeyGen-Konto eintragen
+#   3. Avatar- und Voice-ID (deutsche Stimme) aus deinem HeyGen-Konto eintragen
 # Der Key steht bewusst NICHT im Code, sondern in der Umgebungsvariable.
-HEYGEN_AKTIV = False
 HEYGEN_API_KEY = os.environ.get("HEYGEN_API_KEY", "")
 HEYGEN_AVATAR_ID = "DEIN_AVATAR_ID"   # HeyGen -> Avatars -> ID kopieren
-HEYGEN_VOICE_ID = "DEIN_VOICE_ID"     # HeyGen -> Voices  -> ID kopieren
+HEYGEN_VOICE_ID = "DEIN_VOICE_ID"     # HeyGen -> Voices (deutsch) -> ID kopieren
 HEYGEN_MAX_WARTEN = 180               # Sekunden, die wir aufs Rendern warten
-
-# --- KI-Video-Anbieter waehlen -----------------------------------------------
-# "higgsfield", "heygen" oder None (aus). Standard: aus.
-VIDEO_PROVIDER = None
 
 # --- Higgsfield (optional) ---------------------------------------------------
 # Key als Umgebungsvariable setzen:  export HIGGSFIELD_API_KEY=dein_key
@@ -226,7 +228,7 @@ def heygen_video_erzeugen(skript: str) -> str | None:
     auftritt. Genaue Feld-/Endpunktnamen ggf. mit der aktuellen HeyGen-API-Doku
     abgleichen: https://docs.heygen.com
     """
-    if not (HEYGEN_AKTIV and HEYGEN_API_KEY):
+    if not HEYGEN_API_KEY:
         return None
 
     import time
@@ -382,6 +384,15 @@ def erzeuge_video(kunde: dict, tage_bis_ablauf: int) -> str | None:
     return None
 
 
+def video_provider_bereit() -> bool:
+    """True, wenn ein Anbieter gewaehlt UND sein API-Key gesetzt ist."""
+    if VIDEO_PROVIDER == "higgsfield":
+        return bool(HIGGSFIELD_API_KEY)
+    if VIDEO_PROVIDER == "heygen":
+        return bool(HEYGEN_API_KEY)
+    return False
+
+
 # --- Pipeline ----------------------------------------------------------------
 
 def lade_kunden(pfad: Path) -> list[dict]:
@@ -432,7 +443,7 @@ def main() -> int:
 
         # Optional: KI-Video automatisch erzeugen (Anbieter via VIDEO_PROVIDER),
         # falls aktiviert und noch kein Video in der CSV hinterlegt ist.
-        if VIDEO_PROVIDER and not kunde.get("video_url", "").strip():
+        if video_provider_bereit() and not kunde.get("video_url", "").strip():
             print(f"  ... erzeuge {VIDEO_PROVIDER}-Video fuer #{kunde['kunden_id']} ...")
             kunde["video_url"] = erzeuge_video(kunde, tage) or ""
 
