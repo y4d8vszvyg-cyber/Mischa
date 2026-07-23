@@ -286,6 +286,11 @@
     font-family:'Inter', sans-serif;
   }
   #gate input:focus{ outline:2px solid var(--brass-light); outline-offset:2px; }
+  #gate .geb-row{ display:flex; gap:10px; align-items:center; justify-content:center; }
+  #gate .geb-row input{ width:auto; text-align:center; padding:14px 8px; letter-spacing:0.12em; }
+  #gate #geb-tag, #gate #geb-monat{ flex:0 0 64px; }
+  #gate #geb-jahr{ flex:0 0 92px; }
+  #gate .geb-sep{ color:rgba(234,230,221,0.4); font-size:18px; }
   #gate button{
     padding:14px 20px; border-radius:10px; border:none;
     background:var(--brass); color:#1a1206; font-size:15px; font-weight:600;
@@ -306,7 +311,13 @@
     <div class="brandline">Nordlicht Versicherung</div>
     <h2>Kurze Bestätigung</h2>
     <p>Diese Seite enthält persönliche Angaben. Bitte bestätigen Sie mit Ihrem Geburtsdatum, dass Sie die richtige Person sind.</p>
-    <input id="gebdat" type="text" inputmode="numeric" autocomplete="off" placeholder="TT.MM.JJJJ" aria-label="Geburtsdatum">
+    <div class="geb-row">
+      <input id="geb-tag" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="TT" aria-label="Tag">
+      <span class="geb-sep">.</span>
+      <input id="geb-monat" type="text" inputmode="numeric" maxlength="2" autocomplete="off" placeholder="MM" aria-label="Monat">
+      <span class="geb-sep">.</span>
+      <input id="geb-jahr" type="text" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="JJJJ" aria-label="Jahr">
+    </div>
     <button type="submit">Weiter</button>
     <div class="err" id="gate-err" role="alert"></div>
     <div class="hint">Ihre Daten sind verschlüsselt hinterlegt und werden erst nach korrekter Eingabe entschlüsselt.</div>
@@ -376,8 +387,21 @@
     var gate = document.getElementById("gate");
     var pageEl = document.getElementById("page");
     var form = document.getElementById("gate-form");
-    var input = document.getElementById("gebdat");
+    var inTag = document.getElementById("geb-tag");
+    var inMonat = document.getElementById("geb-monat");
+    var inJahr = document.getElementById("geb-jahr");
     var errEl = document.getElementById("gate-err");
+
+    // Nur Ziffern zulassen und automatisch ins naechste Feld springen.
+    function nurZiffern(el, naechstes) {
+      el.addEventListener("input", function () {
+        el.value = el.value.replace(/\D/g, "");
+        if (naechstes && el.value.length >= el.maxLength) naechstes.focus();
+      });
+    }
+    nurZiffern(inTag, inMonat);
+    nurZiffern(inMonat, inJahr);
+    nurZiffern(inJahr, null);
 
     var MONATE = ["Januar", "Februar", "März", "April", "Mai", "Juni",
       "Juli", "August", "September", "Oktober", "November", "Dezember"];
@@ -471,7 +495,8 @@
       var btn = form.querySelector("button");
       btn.disabled = true;
       try {
-        var daten = await entsperren(input.value);
+        var geb = inTag.value + "." + inMonat.value + "." + inJahr.value;
+        var daten = await entsperren(geb);
         fuellen(daten);
         gate.style.display = "none";
         pageEl.style.display = "";
