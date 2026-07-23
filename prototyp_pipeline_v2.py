@@ -84,6 +84,19 @@ HEYGEN_AVATAR_ID = "DEIN_AVATAR_ID"   # HeyGen -> Avatars -> ID kopieren
 HEYGEN_VOICE_ID = "DEIN_VOICE_ID"     # HeyGen -> Voices  -> ID kopieren
 HEYGEN_MAX_WARTEN = 180               # Sekunden, die wir aufs Rendern warten
 
+# --- KI-Video-Anbieter waehlen -----------------------------------------------
+# "higgsfield", "heygen" oder None (aus). Standard: aus.
+VIDEO_PROVIDER = None
+
+# --- Higgsfield (optional) ---------------------------------------------------
+# Key als Umgebungsvariable setzen:  export HIGGSFIELD_API_KEY=dein_key
+# WICHTIG: Endpunkt-Pfade und JSON-Feldnamen unten mit der aktuellen
+# Higgsfield-API-Doku abgleichen - sie sind als Ausgangspunkt gesetzt.
+HIGGSFIELD_API_KEY = os.environ.get("HIGGSFIELD_API_KEY", "")
+HIGGSFIELD_BASE = "https://api.higgsfield.ai"
+HIGGSFIELD_MAX_WARTEN = 300           # Sekunden fuers Rendern (Motion dauert laenger)
+HIGGSFIELD_BILD_URL = ""              # optionales Start-/Referenzbild (leer = keins)
+
 
 # --- Hilfsfunktionen ---------------------------------------------------------
 
@@ -270,6 +283,105 @@ def heygen_video_erzeugen(skript: str) -> str | None:
         return None
 
 
+# --- (Optional) KI-Video automatisch erzeugen (Higgsfield) -------------------
+
+def higgsfield_prompt(kunde: dict, tage_bis_ablauf: int) -> str:
+    """Prompt fuer das Higgsfield-Video (Motion/Cineastik) pro Kunde.
+
+    Higgsfield spricht keinen Text; die Personalisierung passiert visuell/inhaltlich
+    ueber den Prompt (und optional ein Referenzbild).
+    """
+    produkt = kunde.get("versicherungsart", "Versicherung")
+    return (
+        f"Warmer, cineastischer Kurzclip fuer eine Versicherungs-Botschaft zu "
+        f"'{produkt}'. Ruhige Kamerafahrt, freundliche Herbststimmung, "
+        f"vertrauensvoll und hochwertig."
+    )
+
+
+def higgsfield_video_erzeugen(prompt: str) -> str | None:
+    """Erzeugt ein Higgsfield-Video aus dem Prompt und liefert die Video-URL.
+
+    Ablauf wie ueberall: Auftrag anlegen -> auf Fertigstellung warten (Polling)
+    -> URL holen. Gibt None zurueck, wenn nicht aktiv/konfiguriert oder Fehler.
+
+    >>> ANPASSEN <<< Endpunkt-Pfade und JSON-Feldnamen mit der aktuellen
+    Higgsfield-API-Doku abgleichen (Auth-Header, /generate-Pfad, Status-Feld,
+    URL-Feld). Der Ablauf bleibt gleich, nur die genauen Namen koennen abweichen.
+    """
+    if not (VIDEO_PROVIDER == "higgsfield" and HIGGSFIELD_API_KEY):
+        return None
+
+    import time
+    import requests
+
+    kopf = {
+        "Authorization": f"Bearer {HIGGSFIELD_API_KEY}",
+        "Content-Type": "application/json",
+    }
+    auftrag = {"prompt": prompt}                 # ggf. + "duration", "model", ...
+    if HIGGSFIELD_BILD_URL:
+        auftrag["image_url"] = HIGGSFIELD_BILD_URL  # Bild-zu-Video (optional)
+
+    def hole(d: dict, *pfade):
+        """Erst-passenden Wert aus verschachteltem JSON holen (robust ggü. Schema)."""
+        for pfad in pfade:
+            akt = d
+            for teil in pfad:
+                akt = akt.get(teil) if isinstance(akt, dict) else None
+                if akt is None:
+                    break
+            if akt:
+                return akt
+        return None
+
+    try:
+        antwort = requests.post(
+            f"{HIGGSFIELD_BASE}/v1/video/generations",   # >>> Pfad ggf. anpassen
+            json=auftrag, headers=kopf, timeout=30,
+        )
+        antwort.raise_for_status()
+        job = antwort.json()
+        job_id = hole(job, ("id",), ("data", "id"), ("job_id",))
+        if not job_id:
+            print("  ! Higgsfield: keine Job-ID in der Antwort", file=sys.stderr)
+            return None
+
+        gewartet = 0
+        while gewartet < HIGGSFIELD_MAX_WARTEN:
+            status = requests.get(
+                f"{HIGGSFIELD_BASE}/v1/video/generations/{job_id}",  # >>> ggf. anpassen
+                headers=kopf, timeout=30,
+            )
+            status.raise_for_status()
+            d = status.json()
+            zustand = hole(d, ("status",), ("data", "status"))
+            if zustand in ("completed", "succeeded", "done", "finished"):
+                return hole(
+                    d, ("video_url",), ("output", "url"), ("data", "video_url"),
+                    ("result", "url"), ("data", "output", "url"),
+                )
+            if zustand in ("failed", "error"):
+                print(f"  ! Higgsfield-Rendering fehlgeschlagen: {d}", file=sys.stderr)
+                return None
+            time.sleep(10)
+            gewartet += 10
+        print("  ! Higgsfield-Video nicht rechtzeitig fertig", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"  ! Higgsfield-Fehler ({e.__class__.__name__}): {e}", file=sys.stderr)
+        return None
+
+
+def erzeuge_video(kunde: dict, tage_bis_ablauf: int) -> str | None:
+    """Waehlt den konfigurierten Anbieter und erzeugt ein Video (oder None)."""
+    if VIDEO_PROVIDER == "higgsfield":
+        return higgsfield_video_erzeugen(higgsfield_prompt(kunde, tage_bis_ablauf))
+    if VIDEO_PROVIDER == "heygen":
+        return heygen_video_erzeugen(heygen_skript(kunde, tage_bis_ablauf))
+    return None
+
+
 # --- Pipeline ----------------------------------------------------------------
 
 def lade_kunden(pfad: Path) -> list[dict]:
@@ -318,11 +430,11 @@ def main() -> int:
     for kunde in faellig:
         tage = kunde["_tage_bis_ablauf"]
 
-        # Optional: KI-Video automatisch erzeugen, falls aktiviert und noch kein
-        # Video in der CSV hinterlegt ist. Ergebnis wird in video_url() genutzt.
-        if HEYGEN_AKTIV and not kunde.get("video_url", "").strip():
-            print(f"  ... erzeuge HeyGen-Video fuer #{kunde['kunden_id']} ...")
-            kunde["video_url"] = heygen_video_erzeugen(heygen_skript(kunde, tage)) or ""
+        # Optional: KI-Video automatisch erzeugen (Anbieter via VIDEO_PROVIDER),
+        # falls aktiviert und noch kein Video in der CSV hinterlegt ist.
+        if VIDEO_PROVIDER and not kunde.get("video_url", "").strip():
+            print(f"  ... erzeuge {VIDEO_PROVIDER}-Video fuer #{kunde['kunden_id']} ...")
+            kunde["video_url"] = erzeuge_video(kunde, tage) or ""
 
         url = video_url(kunde)
 
