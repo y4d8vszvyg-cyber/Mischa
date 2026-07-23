@@ -1,12 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 360 120" role="img" aria-label="Ronkin und Co">
-  <rect width="360" height="120" fill="#101c2c"/>
-  <!-- Siegel: volle Messing-Scheibe mit ausgespartem R -->
-  <circle cx="62" cy="60" r="32" fill="#b98a4e"/>
-  <circle cx="62" cy="60" r="25.5" fill="none" stroke="#101c2c" stroke-opacity="0.22" stroke-width="1.2"/>
-  <text x="62" y="62" text-anchor="middle" dominant-baseline="central"
-        font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="38" fill="#101c2c">R</text>
-  <!-- Wortmarke -->
-  <text x="112" y="62" dominant-baseline="central"
-        font-family="Georgia, 'Times New Roman', serif" font-size="34"
-        letter-spacing="0.5" fill="#eae6dd">Ronkin<tspan fill="#d9ae74">&amp;</tspan>co</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="130" viewBox="0 0 380 130" role="img" aria-label="Ronkin und Co, Versicherungsmakler">
+  <rect width="380" height="130" fill="#101c2c"/>
+  <text x="30" y="58" dominant-baseline="central"
+        font-family="Georgia, 'Times New Roman', serif" font-size="46" letter-spacing="1"
+        fill="#eae6dd">Ronkin<tspan fill="#b23a48" font-style="italic">&amp;</tspan>co</text>
+  <rect x="32" y="78" width="270" height="2" fill="#9b2d3a"/>
+  <text x="33" y="98" font-family="Georgia, 'Times New Roman', serif" font-size="12"
+        letter-spacing="4" fill="#eae6dd" fill-opacity="0.55">VERSICHERUNGSMAKLER</text>
 </svg>
