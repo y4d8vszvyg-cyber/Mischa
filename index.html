@@ -375,14 +375,19 @@
   </div>
 
   <div class="actions">
-    <a href="#" class="btn btn-primary">Vertrag mit einem Klick verlängern</a>
-    <a href="#" class="btn btn-secondary">Rückruf von meiner Betreuerin anfordern</a>
+    <a href="#" id="btn-verlaengern" class="btn btn-primary">Vertrag mit einem Klick verlängern</a>
+    <a href="#" id="btn-rueckruf" class="btn btn-secondary">Rückruf von meiner Betreuerin anfordern</a>
     <div class="fineprint">Ihre Daten werden ausschließlich zur Erstellung dieser<br>persönlichen Nachricht verwendet · DSGVO-konform</div>
   </div>
 </div>
 <script>
   (function () {
     "use strict";
+
+    // === Kontaktdaten der Versicherung – hier eure echten Werte eintragen ===
+    var KONTAKT_EMAIL = "service@nordlicht-versicherung.de";
+    var KONTAKT_TEL = "+49 40 1234567";
+
     var q = new URLSearchParams(location.search);
     var gate = document.getElementById("gate");
     var pageEl = document.getElementById("page");
@@ -487,6 +492,26 @@
         frame.innerHTML = "";
         frame.appendChild(f);
       }
+
+      // Button 1: Vertrag verlaengern -> vorausgefuellte E-Mail
+      var name = (anrede + " " + nachname).trim();
+      var police = k.pn || "";
+      var vBtn = document.getElementById("btn-verlaengern");
+      if (vBtn) {
+        var betreff = "Vertragsverlängerung" + (produkt ? " – " + produkt : "");
+        var body = "Guten Tag,\n\nich möchte meinen Vertrag gerne verlängern.\n\n"
+          + (produkt ? "Produkt: " + produkt + "\n" : "")
+          + (police ? "Police: " + police + "\n" : "")
+          + "Name: " + name + "\n\n"
+          + "Bitte melden Sie sich bei mir.\n\nFreundliche Grüße\n" + name;
+        vBtn.href = "mailto:" + KONTAKT_EMAIL
+          + "?subject=" + encodeURIComponent(betreff)
+          + "&body=" + encodeURIComponent(body);
+      }
+
+      // Button 2: Rueckruf -> direkter Anruf (tel:)
+      var rBtn = document.getElementById("btn-rueckruf");
+      if (rBtn) rBtn.href = "tel:" + KONTAKT_TEL.replace(/[^+\d]/g, "");
     }
 
     form.addEventListener("submit", async function (ev) {

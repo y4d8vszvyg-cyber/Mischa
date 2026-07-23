@@ -54,7 +54,7 @@ VORLAUF_TAGE = 60
 # Versionskennzeichen in der URL (Cache-Buster). Bei jeder Aenderung an der
 # Landingpage hochzaehlen, damit gescannte QR-Codes die frische Seite laden
 # und nicht die im Browser zwischengespeicherte alte Version.
-SEITEN_VERSION = "7"
+SEITEN_VERSION = "8"
 
 # Anzahl der PBKDF2-Iterationen (muss mit dem Wert in der Landingpage
 # uebereinstimmen). Hoeher = sicherer, aber langsamer beim Entsperren.
@@ -126,6 +126,7 @@ def video_url(kunde: dict) -> str:
         "j": str(jahre_vertragstreue(kunde)),
         "s": kunde.get("schadensfaelle", ""),
         "r": kunde.get("rabatt_prozent", ""),
+        "pn": kunde.get("police_nr", ""),
         "v": kunde.get("video_url", "").strip(),
     }
     geburtsdatum = normalisiere_geburtsdatum(kunde.get("geburtsdatum", ""))
