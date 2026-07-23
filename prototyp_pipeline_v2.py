@@ -54,7 +54,7 @@ VORLAUF_TAGE = 60
 # Versionskennzeichen in der URL (Cache-Buster). Bei jeder Aenderung an der
 # Landingpage hochzaehlen, damit gescannte QR-Codes die frische Seite laden
 # und nicht die im Browser zwischengespeicherte alte Version.
-SEITEN_VERSION = "8"
+SEITEN_VERSION = "9"
 
 # Anzahl der PBKDF2-Iterationen (muss mit dem Wert in der Landingpage
 # uebereinstimmen). Hoeher = sicherer, aber langsamer beim Entsperren.
@@ -71,6 +71,18 @@ ABSENDER = "Beispiel Versicherung AG"
 
 # Bezugsdatum ("heute").
 HEUTE = date(2026, 7, 22)
+
+# --- KI-Video (HeyGen) - optional, standardmaessig AUS -----------------------
+# Zum Aktivieren:
+#   1. HEYGEN_AKTIV = True setzen
+#   2. API-Key als Umgebungsvariable setzen:  export HEYGEN_API_KEY=dein_key
+#   3. Avatar- und Voice-ID aus deinem HeyGen-Konto eintragen
+# Der Key steht bewusst NICHT im Code, sondern in der Umgebungsvariable.
+HEYGEN_AKTIV = False
+HEYGEN_API_KEY = os.environ.get("HEYGEN_API_KEY", "")
+HEYGEN_AVATAR_ID = "DEIN_AVATAR_ID"   # HeyGen -> Avatars -> ID kopieren
+HEYGEN_VOICE_ID = "DEIN_VOICE_ID"     # HeyGen -> Voices  -> ID kopieren
+HEYGEN_MAX_WARTEN = 180               # Sekunden, die wir aufs Rendern warten
 
 
 # --- Hilfsfunktionen ---------------------------------------------------------
@@ -178,27 +190,84 @@ def erzeuge_qr_code(url: str, ziel: Path) -> None:
     bild.save(ziel)
 
 
-# --- (Optional) Video-Generierung ueber HTTP ---------------------------------
+# --- (Optional) KI-Video automatisch erzeugen (HeyGen) -----------------------
 
-def video_anfordern(kunde: dict, skript: str) -> str | None:
+def heygen_skript(kunde: dict, tage_bis_ablauf: int) -> str:
+    """Kurzer Sprech-Text, den der Avatar im Video sagt (pro Kunde personalisiert)."""
+    anrede = kunde.get("anrede", "")
+    nachname = kunde.get("nachname", "")
+    produkt = kunde.get("versicherungsart", "Versicherung")
+    return (
+        f"Hallo {anrede} {nachname}, schoen, dass wir Sie erreichen. "
+        f"Ihre {produkt} laeuft in {tage_bis_ablauf} Tagen aus. "
+        f"Wir wuerden uns freuen, Sie weiter zu begleiten - eine Verlaengerung "
+        f"ist mit einem Klick erledigt. Vielen Dank fuer Ihr Vertrauen."
+    )
+
+
+def heygen_video_erzeugen(skript: str) -> str | None:
+    """Erzeugt ein HeyGen-Video aus dem Sprech-Skript und liefert die mp4-URL.
+
+    Ablauf: Auftrag senden -> auf Fertigstellung warten (Polling) -> URL holen.
+    Gibt None zurueck, wenn HeyGen nicht aktiv/konfiguriert ist oder ein Fehler
+    auftritt. Genaue Feld-/Endpunktnamen ggf. mit der aktuellen HeyGen-API-Doku
+    abgleichen: https://docs.heygen.com
     """
-    STUB: Hier wuerde ein KI-Video-Dienst per HTTP (requests) angesprochen,
-    der aus dem Skript ein personalisiertes Video erzeugt und eine URL liefert.
+    if not (HEYGEN_AKTIV and HEYGEN_API_KEY):
+        return None
 
-    Absichtlich nicht aktiv, weil kein echter Endpunkt konfiguriert ist.
-    Beispielhafter Aufbau:
+    import time
+    import requests
 
-        import requests
-        resp = requests.post(
-            os.environ["VIDEO_API_URL"],
-            headers={"Authorization": f"Bearer {os.environ['VIDEO_API_KEY']}"},
-            json={"script": skript, "kunde_id": kunde["kunden_id"]},
-            timeout=30,
+    kopf = {"X-Api-Key": HEYGEN_API_KEY, "Content-Type": "application/json"}
+    auftrag = {
+        "video_inputs": [
+            {
+                "character": {
+                    "type": "avatar",
+                    "avatar_id": HEYGEN_AVATAR_ID,
+                    "avatar_style": "normal",
+                },
+                "voice": {
+                    "type": "text",
+                    "input_text": skript,
+                    "voice_id": HEYGEN_VOICE_ID,
+                },
+            }
+        ],
+        "dimension": {"width": 1280, "height": 720},
+    }
+
+    try:
+        antwort = requests.post(
+            "https://api.heygen.com/v2/video/generate",
+            json=auftrag, headers=kopf, timeout=30,
         )
-        resp.raise_for_status()
-        return resp.json()["video_url"]
-    """
-    return None
+        antwort.raise_for_status()
+        video_id = antwort.json()["data"]["video_id"]
+
+        # Auf Fertigstellung warten (Polling).
+        gewartet = 0
+        while gewartet < HEYGEN_MAX_WARTEN:
+            status = requests.get(
+                "https://api.heygen.com/v1/video_status.get",
+                params={"video_id": video_id}, headers=kopf, timeout=30,
+            )
+            status.raise_for_status()
+            d = status.json()["data"]
+            if d.get("status") == "completed":
+                return d.get("video_url")
+            if d.get("status") == "failed":
+                print(f"  ! HeyGen-Rendering fehlgeschlagen: {d.get('error')}",
+                      file=sys.stderr)
+                return None
+            time.sleep(10)
+            gewartet += 10
+        print("  ! HeyGen-Video nicht rechtzeitig fertig", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"  ! HeyGen-Fehler ({e.__class__.__name__}): {e}", file=sys.stderr)
+        return None
 
 
 # --- Pipeline ----------------------------------------------------------------
@@ -248,6 +317,13 @@ def main() -> int:
     uebersicht = []
     for kunde in faellig:
         tage = kunde["_tage_bis_ablauf"]
+
+        # Optional: KI-Video automatisch erzeugen, falls aktiviert und noch kein
+        # Video in der CSV hinterlegt ist. Ergebnis wird in video_url() genutzt.
+        if HEYGEN_AKTIV and not kunde.get("video_url", "").strip():
+            print(f"  ... erzeuge HeyGen-Video fuer #{kunde['kunden_id']} ...")
+            kunde["video_url"] = heygen_video_erzeugen(heygen_skript(kunde, tage)) or ""
+
         url = video_url(kunde)
 
         text = erzeuge_anschreiben(kunde, tage)

@@ -481,16 +481,28 @@
 
       var frame = document.querySelector(".video-frame");
       if (video && frame) {
-        var f = document.createElement("iframe");
-        f.src = video;
-        f.title = "Ihre persönliche Nachricht";
-        f.setAttribute("frameborder", "0");
-        f.setAttribute("allow", "encrypted-media; fullscreen; autoplay");
-        f.setAttribute("allowfullscreen", "");
-        f.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;";
+        var el;
+        if (/\.mp4($|\?)/i.test(video)) {
+          // Direkte Videodatei (z. B. von HeyGen) -> inline abspielen
+          el = document.createElement("video");
+          el.src = video;
+          el.controls = true;
+          el.setAttribute("playsinline", "");
+          el.setAttribute("preload", "metadata");
+          el.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;background:#000;object-fit:cover;";
+        } else {
+          // Einbett-Link (z. B. HeyGen-Embed) -> iframe
+          el = document.createElement("iframe");
+          el.src = video;
+          el.title = "Ihre persönliche Nachricht";
+          el.setAttribute("frameborder", "0");
+          el.setAttribute("allow", "encrypted-media; fullscreen; autoplay");
+          el.setAttribute("allowfullscreen", "");
+          el.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0;";
+        }
         frame.style.aspectRatio = "16 / 9";
         frame.innerHTML = "";
-        frame.appendChild(f);
+        frame.appendChild(el);
       }
 
       // Button 1: Vertrag verlaengern -> vorausgefuellte E-Mail
