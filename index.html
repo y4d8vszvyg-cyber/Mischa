@@ -250,7 +250,7 @@
   #gate{
     position:fixed; inset:0; z-index:50;
     display:flex; align-items:center; justify-content:center;
-    padding:28px; background:var(--ink);
+    padding:20px; background:var(--ink);
   }
   #gate::before{
     content:""; position:absolute; inset:0; pointer-events:none;
@@ -286,11 +286,11 @@
     font-family:'Inter', sans-serif;
   }
   #gate input:focus{ outline:2px solid var(--brass-light); outline-offset:2px; }
-  #gate .geb-row{ display:flex; gap:10px; align-items:center; justify-content:center; }
-  #gate .geb-row input{ width:auto; text-align:center; padding:14px 8px; letter-spacing:0.12em; }
-  #gate #geb-tag, #gate #geb-monat{ flex:0 0 64px; }
-  #gate #geb-jahr{ flex:0 0 92px; }
-  #gate .geb-sep{ color:rgba(234,230,221,0.4); font-size:18px; }
+  #gate .geb-row{ display:flex; gap:8px; align-items:center; justify-content:center; width:100%; }
+  #gate .geb-row input{ width:auto; min-width:0; text-align:center; padding:14px 4px; letter-spacing:0.06em; }
+  #gate #geb-tag, #gate #geb-monat{ flex:1 1 0; }
+  #gate #geb-jahr{ flex:1.5 1 0; }
+  #gate .geb-sep{ flex:0 0 auto; color:rgba(234,230,221,0.4); font-size:18px; }
   #gate button{
     padding:14px 20px; border-radius:10px; border:none;
     background:var(--brass); color:#1a1206; font-size:15px; font-weight:600;
