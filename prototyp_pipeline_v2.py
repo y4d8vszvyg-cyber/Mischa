@@ -24,14 +24,20 @@ Aufruf:    python3 prototyp_pipeline_v2.py
 
 from __future__ import annotations
 
+import base64
 import csv
-import hashlib
+import json
+import os
+import re
 import sys
 from datetime import date, datetime
 from pathlib import Path
 from urllib.parse import urlencode
 
 import qrcode
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 # --- Konfiguration -----------------------------------------------------------
 
@@ -48,7 +54,11 @@ VORLAUF_TAGE = 60
 # Versionskennzeichen in der URL (Cache-Buster). Bei jeder Aenderung an der
 # Landingpage hochzaehlen, damit gescannte QR-Codes die frische Seite laden
 # und nicht die im Browser zwischengespeicherte alte Version.
-SEITEN_VERSION = "4"
+SEITEN_VERSION = "5"
+
+# Anzahl der PBKDF2-Iterationen (muss mit dem Wert in der Landingpage
+# uebereinstimmen). Hoeher = sicherer, aber langsamer beim Entsperren.
+PBKDF2_ITER = 200000
 
 # Basis-URL der gehosteten Landingpage: kostenlose GitHub-Pages-Adresse
 # (gehoert GitHub, braucht keine eigene Domain/DNS). Funktioniert erst, wenn
@@ -72,12 +82,6 @@ def parse_datum(wert: str):
         return None
 
 
-def video_token(kunde: dict) -> str:
-    """Stabiler, nicht erratbarer Token pro Kunde/Police fuer die Video-URL."""
-    roh = f"{kunde['kunden_id']}|{kunde['police_nr']}".encode("utf-8")
-    return hashlib.sha256(roh).hexdigest()[:16]
-
-
 def jahre_vertragstreue(kunde: dict) -> int:
     try:
         return max(0, HEUTE.year - int(kunde.get("vertragsbeginn", "")))
@@ -85,24 +89,61 @@ def jahre_vertragstreue(kunde: dict) -> int:
         return 0
 
 
+def _b64url(rohbytes: bytes) -> str:
+    """Base64url ohne Padding (URL-tauglich)."""
+    return base64.urlsafe_b64encode(rohbytes).decode("ascii").rstrip("=")
+
+
+def normalisiere_geburtsdatum(wert: str) -> str:
+    """Geburtsdatum auf die kanonische Form TTMMJJJJ bringen (Schluessel-Basis).
+
+    Muss identisch zur Funktion normGeb() in der Landingpage sein.
+    Akzeptiert TT.MM.JJJJ ebenso wie JJJJ-MM-TT.
+    """
+    gruppen = re.findall(r"\d+", wert or "")
+    if len(gruppen) == 3:
+        if len(gruppen[0]) == 4:            # JJJJ-MM-TT
+            jahr, monat, tag = gruppen
+        else:                                # TT.MM.JJJJ
+            tag, monat, jahr = gruppen
+        return f"{int(tag):02d}{int(monat):02d}{int(jahr):04d}"
+    return "".join(gruppen)
+
+
 def video_url(kunde: dict) -> str:
-    """Landingpage-URL mit Kundendaten als Parameter (die Seite liest sie aus)."""
-    params = {
-        "ver": SEITEN_VERSION,                 # Cache-Buster (frische Seite laden)
-        "k": video_token(kunde),              # Token (Tracking/Eindeutigkeit)
-        "a": kunde.get("anrede", ""),          # Anrede (Herr/Frau)
-        "n": kunde.get("nachname", ""),        # Nachname
-        "p": kunde.get("versicherungsart", ""),  # Produkt
-        "b": kunde.get("vertragsbeginn", ""),  # Vertragsbeginn (Jahr)
-        "e": kunde.get("ablaufdatum", ""),     # Ablaufdatum (YYYY-MM-DD)
-        "j": str(jahre_vertragstreue(kunde)),  # Jahre Vertragstreue
-        "s": kunde.get("schadensfaelle", ""),  # Schadensfaelle
-        "r": kunde.get("rabatt_prozent", ""),  # Rabatt in Prozent
+    """Personalisierte URL mit AES-GCM-verschluesselten Kundendaten.
+
+    Der Schluessel wird per PBKDF2 aus dem Geburtsdatum abgeleitet. In der URL
+    steht nur der verschluesselte Block (salt/iv/daten) - ohne korrektes
+    Geburtsdatum sind die persoenlichen Daten nicht lesbar.
+    """
+    daten = {
+        "a": kunde.get("anrede", ""),
+        "n": kunde.get("nachname", ""),
+        "p": kunde.get("versicherungsart", ""),
+        "b": kunde.get("vertragsbeginn", ""),
+        "e": kunde.get("ablaufdatum", ""),
+        "j": str(jahre_vertragstreue(kunde)),
+        "s": kunde.get("schadensfaelle", ""),
+        "r": kunde.get("rabatt_prozent", ""),
+        "v": kunde.get("video_url", "").strip(),
     }
-    # Video-URL (z. B. HeyGen) nur anhaengen, wenn vorhanden.
-    video = kunde.get("video_url", "").strip()
-    if video:
-        params["v"] = video
+    geburtsdatum = normalisiere_geburtsdatum(kunde.get("geburtsdatum", ""))
+
+    salt = os.urandom(16)
+    iv = os.urandom(12)
+    schluessel = PBKDF2HMAC(
+        algorithm=hashes.SHA256(), length=32, salt=salt, iterations=PBKDF2_ITER
+    ).derive(geburtsdatum.encode("utf-8"))
+    klartext = json.dumps(daten, ensure_ascii=False).encode("utf-8")
+    geheim = AESGCM(schluessel).encrypt(iv, klartext, None)
+
+    params = {
+        "ver": SEITEN_VERSION,       # Cache-Buster
+        "s": _b64url(salt),          # Salt fuer PBKDF2
+        "iv": _b64url(iv),           # AES-GCM IV
+        "d": _b64url(geheim),        # verschluesselte Daten + Auth-Tag
+    }
     return f"{VIDEO_BASIS_URL}?{urlencode(params)}"
 
 
