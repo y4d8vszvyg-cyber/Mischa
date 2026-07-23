@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="120" viewBox="0 0 420 120" role="img" aria-label="Ronkin und Co Punkt com">
+  <rect width="420" height="120" fill="#101c2c"/>
+  <!-- Monogramm: feines Serifen-R im Kreis -->
+  <circle cx="60" cy="60" r="34" fill="none" stroke="#d9ae74" stroke-width="2"/>
+  <text x="60" y="61" text-anchor="middle" dominant-baseline="central"
+        font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#d9ae74">R</text>
+  <!-- Wortmarke -->
+  <text x="112" y="61" dominant-baseline="central"
+        font-family="Georgia, 'Times New Roman', serif" font-size="34"
+        letter-spacing="0.5" fill="#eae6dd">Ronkin<tspan fill="#d9ae74">&amp;</tspan>co.com</text>
+</svg>
