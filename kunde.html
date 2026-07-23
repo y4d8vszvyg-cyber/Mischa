@@ -391,9 +391,8 @@
   (function () {
     "use strict";
 
-    // === Kontaktdaten der Versicherung – hier eure echten Werte eintragen ===
-    var KONTAKT_EMAIL = "service@ronkinco.com";
-    var KONTAKT_TEL = "+49 40 1234567";
+    // === Kontaktdaten – hier eure echte Adresse eintragen ===
+    var KONTAKT_EMAIL = "ronkinco@web.de";
 
     var q = new URLSearchParams(location.search);
     var gate = document.getElementById("gate");
@@ -528,9 +527,18 @@
           + "&body=" + encodeURIComponent(body);
       }
 
-      // Button 2: Rueckruf -> direkter Anruf (tel:)
+      // Button 2: Rueckruf -> vorausgefuellte E-Mail (Rueckrufbitte)
       var rBtn = document.getElementById("btn-rueckruf");
-      if (rBtn) rBtn.href = "tel:" + KONTAKT_TEL.replace(/[^+\d]/g, "");
+      if (rBtn) {
+        var rBetreff = "Rückrufbitte" + (produkt ? " – " + produkt : "");
+        var rBody = "Guten Tag,\n\nbitte kontaktieren Sie mich zu meiner "
+          + produkt + ".\n\nName: " + name + "\n"
+          + (police ? "Police: " + police + "\n" : "")
+          + "Meine Rückrufnummer: \n";
+        rBtn.href = "mailto:" + KONTAKT_EMAIL
+          + "?subject=" + encodeURIComponent(rBetreff)
+          + "&body=" + encodeURIComponent(rBody);
+      }
     }
 
     form.addEventListener("submit", async function (ev) {
