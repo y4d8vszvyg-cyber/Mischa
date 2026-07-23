@@ -54,7 +54,7 @@ VORLAUF_TAGE = 60
 # Versionskennzeichen in der URL (Cache-Buster). Bei jeder Aenderung an der
 # Landingpage hochzaehlen, damit gescannte QR-Codes die frische Seite laden
 # und nicht die im Browser zwischengespeicherte alte Version.
-SEITEN_VERSION = "16"
+SEITEN_VERSION = "17"
 
 # Anzahl der PBKDF2-Iterationen (muss mit dem Wert in der Landingpage
 # uebereinstimmen). Hoeher = sicherer, aber langsamer beim Entsperren.
@@ -64,7 +64,7 @@ PBKDF2_ITER = 200000
 # (gehoert GitHub, braucht keine eigene Domain/DNS). Funktioniert erst, wenn
 # unter Settings -> Pages KEINE Custom Domain mehr eingetragen ist.
 # Kundendaten werden als Query-Parameter angehaengt.
-VIDEO_BASIS_URL = "https://y4d8vszvyg-cyber.github.io/Mischa/"
+VIDEO_BASIS_URL = "https://y4d8vszvyg-cyber.github.io/Mischa/kunde.html"
 
 # Name des Absenders fuer die Anschreiben (Platzhalter).
 ABSENDER = "Beispiel Versicherung AG"
