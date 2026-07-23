@@ -54,7 +54,7 @@ VORLAUF_TAGE = 60
 # Versionskennzeichen in der URL (Cache-Buster). Bei jeder Aenderung an der
 # Landingpage hochzaehlen, damit gescannte QR-Codes die frische Seite laden
 # und nicht die im Browser zwischengespeicherte alte Version.
-SEITEN_VERSION = "12"
+SEITEN_VERSION = "13"
 
 # Anzahl der PBKDF2-Iterationen (muss mit dem Wert in der Landingpage
 # uebereinstimmen). Hoeher = sicherer, aber langsamer beim Entsperren.

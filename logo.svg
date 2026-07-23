@@ -1,11 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 360 120" role="img" aria-label="Ronkin und Co">
   <rect width="360" height="120" fill="#101c2c"/>
-  <!-- Monogramm: feines Serifen-R im Kreis -->
-  <circle cx="60" cy="60" r="34" fill="none" stroke="#d9ae74" stroke-width="2"/>
-  <text x="60" y="61" text-anchor="middle" dominant-baseline="central"
-        font-family="Georgia, 'Times New Roman', serif" font-size="40" fill="#d9ae74">R</text>
+  <!-- Siegel: volle Messing-Scheibe mit ausgespartem R -->
+  <circle cx="62" cy="60" r="32" fill="#b98a4e"/>
+  <circle cx="62" cy="60" r="25.5" fill="none" stroke="#101c2c" stroke-opacity="0.22" stroke-width="1.2"/>
+  <text x="62" y="62" text-anchor="middle" dominant-baseline="central"
+        font-family="Georgia, 'Times New Roman', serif" font-weight="700" font-size="38" fill="#101c2c">R</text>
   <!-- Wortmarke -->
-  <text x="112" y="61" dominant-baseline="central"
+  <text x="112" y="62" dominant-baseline="central"
         font-family="Georgia, 'Times New Roman', serif" font-size="34"
         letter-spacing="0.5" fill="#eae6dd">Ronkin<tspan fill="#d9ae74">&amp;</tspan>co</text>
 </svg>
