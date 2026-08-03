@@ -74,6 +74,24 @@
   .sm-row .val{ font-size:15px; font-weight:700;}
   .goal-edit{ background:none;border:none;color:var(--accent);font-size:12px; cursor:pointer;padding:0;font-weight:600; text-decoration:underline; text-underline-offset:2px;}
 
+  /* Makros */
+  .macros{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:15px 16px; margin:-8px 0 22px;
+  }
+  .macro{ text-align:center; }
+  .macro .mtop{ display:flex; align-items:center; justify-content:center; gap:6px; }
+  .macro .mv{ font-size:18px; font-weight:800; letter-spacing:-0.02em; }
+  .macro .ml{ font-size:11px; color:var(--muted); margin-top:2px; font-weight:600; }
+  .macro .mtop span[class^="dot-"]{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .dot-p{ background:var(--accent);} .dot-c{ background:var(--blue);} .dot-f{ background:var(--warn);}
+  .macro-bar{ grid-column:1/-1; display:flex; height:8px; border-radius:6px; overflow:hidden; background:var(--bg-soft); margin-top:4px; }
+  .macro-bar .seg{ height:100%; transition:width .5s ease; }
+  .seg-p{ background:var(--accent);} .seg-c{ background:var(--blue);} .seg-f{ background:var(--warn);}
+  .macro-inputs{ display:flex; gap:8px; margin-top:8px; }
+  .macro-inputs .in{ padding:11px 10px; font-size:14px; text-align:center; }
+
   .quick{ background:var(--card); border:1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 18px; }
   .quick h3{ margin:0 0 12px; font-size:13px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.05em;}
   .meals{ display:flex; gap:6px; margin-bottom:12px; }
@@ -138,7 +156,10 @@
     display:flex; align-items:center; gap:12px; margin-bottom:8px; animation: pop .25s ease;
   }
   @keyframes pop{ from{opacity:0; transform: translateY(6px);} to{opacity:1;transform:none;} }
-  .entry .ename{ flex:1; font-size:15px; font-weight:500; word-break:break-word;}
+  .entry .col{ flex:1; min-width:0; display:flex; flex-direction:column; }
+  .entry .ename{ font-size:15px; font-weight:500; word-break:break-word;}
+  .entry .emacro{ font-size:11.5px; color:var(--muted); margin-top:3px; font-weight:500; letter-spacing:.01em; }
+  .entry .emacro b{ color:#b7c2d6; font-weight:700; }
   .entry .ekcal{ font-size:14px; font-weight:700; color:var(--muted); white-space:nowrap; cursor:pointer; border-bottom:1px dashed rgba(147,161,189,.4); }
   .entry .del{
     background:none; border:none; color:#64748b; cursor:pointer; font-size:20px; line-height:1;
@@ -224,6 +245,25 @@
     </div>
   </div>
 
+  <!-- Nährwerte / Makros -->
+  <div class="macros">
+    <div class="macro">
+      <div class="mtop"><span class="dot-p"></span><span class="mv" id="protVal">0 g</span></div>
+      <div class="ml">Eiweiß</div>
+    </div>
+    <div class="macro">
+      <div class="mtop"><span class="dot-c"></span><span class="mv" id="carbVal">0 g</span></div>
+      <div class="ml">Kohlenhydrate</div>
+    </div>
+    <div class="macro">
+      <div class="mtop"><span class="dot-f"></span><span class="mv" id="fatVal">0 g</span></div>
+      <div class="ml">Fett</div>
+    </div>
+    <div class="macro-bar" id="macroBar" title="Energie-Verteilung">
+      <span class="seg seg-p" id="segP"></span><span class="seg seg-c" id="segC"></span><span class="seg seg-f" id="segF"></span>
+    </div>
+  </div>
+
   <div class="quick">
     <h3>Schnell hinzufügen</h3>
     <div class="meals" id="mealSelect">
@@ -248,10 +288,17 @@
       <button class="link-btn" id="toggleManual">Kalorien selbst eingeben</button>
     </div>
 
-    <div class="manual-row" id="manualRow" style="display:none;">
-      <input class="in" id="nameM" type="text" placeholder="Name" autocomplete="off">
-      <input class="in" id="kcalM" type="number" inputmode="numeric" placeholder="kcal" min="0" step="1">
-      <button class="addm" id="addM" aria-label="Hinzufügen">+</button>
+    <div id="manualRow" style="display:none;">
+      <div class="manual-row">
+        <input class="in" id="nameM" type="text" placeholder="Name" autocomplete="off">
+        <input class="in" id="kcalM" type="number" inputmode="numeric" placeholder="kcal" min="0" step="1">
+        <button class="addm" id="addM" aria-label="Hinzufügen">+</button>
+      </div>
+      <div class="macro-inputs">
+        <input class="in" id="prM" type="number" inputmode="decimal" placeholder="Eiweiß g" min="0" step="0.1">
+        <input class="in" id="cbM" type="number" inputmode="decimal" placeholder="Kohlenh. g" min="0" step="0.1">
+        <input class="in" id="ftM" type="number" inputmode="decimal" placeholder="Fett g" min="0" step="0.1">
+      </div>
     </div>
   </div>
 
@@ -296,6 +343,11 @@
       <input class="in" id="prodKcal" type="number" inputmode="numeric" min="0" step="1" placeholder="kcal">
       <span style="font-size:12.5px;color:var(--muted);" id="prodBasis"></span>
     </div>
+    <div class="macro-inputs">
+      <input class="in" id="prodPr" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Eiweiß g">
+      <input class="in" id="prodCb" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Kohlenh. g">
+      <input class="in" id="prodFt" type="number" inputmode="decimal" min="0" step="0.1" placeholder="Fett g">
+    </div>
   </div>
   <div class="dlg-actions">
     <button class="btn-cancel" id="scanClose">Schließen</button>
@@ -314,104 +366,104 @@
   // ============ Lebensmittel-Datenbank (kcal je 100 g/ml gekocht, typ. Portion in g) ============
   // per: Gramm je Maßeinheit für dieses Lebensmittel (überschreibt Standard)
   const DB=[
-    {n:"Nudeln",k:150,p:200,s:["nudeln","pasta","spaghetti","spagetti","penne","makkaroni","fusilli","tagliatelle"],per:{teller:250}},
-    {n:"Reis",k:130,p:180,s:["reis"],per:{teller:220}},
-    {n:"Kartoffeln",k:80,p:200,s:["kartoffeln","kartoffel","salzkartoffeln","pellkartoffeln"]},
-    {n:"Pommes",k:290,p:150,s:["pommes","fritten"]},
-    {n:"Brot",k:250,p:45,s:["brot","vollkornbrot","graubrot","schwarzbrot","mischbrot"],per:{scheibe:45,stück:45}},
-    {n:"Toast",k:280,p:30,s:["toast","toastbrot"],per:{scheibe:30,stück:30}},
-    {n:"Brötchen",k:270,p:55,s:["brötchen","semmel","schrippe","weckle"],per:{stück:55}},
-    {n:"Croissant",k:400,p:60,s:["croissant","gipfeli"],per:{stück:60}},
-    {n:"Müsli",k:360,p:60,s:["müsli","muesli"],per:{schüssel:60,teller:60}},
-    {n:"Haferflocken",k:370,p:50,s:["haferflocken","oats"]},
-    {n:"Porridge",k:90,p:250,s:["porridge","haferbrei"],per:{teller:250,schüssel:250}},
-    {n:"Cornflakes",k:380,p:40,s:["cornflakes"]},
-    {n:"Ei",k:130,p:60,s:["ei","eier","spiegelei","frühstücksei"],per:{stück:60}},
-    {n:"Rührei",k:150,p:120,s:["rührei","rühreier"]},
-    {n:"Omelett",k:155,p:150,s:["omelett","omelette"]},
-    {n:"Hähnchen",k:165,p:150,s:["hähnchenbrust","hühnerbrust","hähnchen","hühnchen","hendl","poulet","chicken"]},
-    {n:"Steak",k:250,p:150,s:["steak","rindfleisch","rinderfilet","rind"]},
-    {n:"Schnitzel",k:290,p:150,s:["schnitzel"],per:{stück:150}},
-    {n:"Schweinefleisch",k:280,p:150,s:["schweinefleisch","schwein","kotelett","kassler"]},
-    {n:"Hackfleisch",k:240,p:125,s:["hackfleisch","gehacktes","hack","mett"]},
-    {n:"Frikadelle",k:270,p:90,s:["frikadelle","bulette","fleischküchle"],per:{stück:90}},
-    {n:"Lachs",k:200,p:150,s:["lachs"]},
-    {n:"Fisch",k:130,p:150,s:["fisch","seelachs","kabeljau","dorsch","scholle","forelle"]},
-    {n:"Thunfisch",k:130,p:120,s:["thunfisch","tuna"],per:{dose:150}},
-    {n:"Wurst",k:300,p:30,s:["wurst","fleischwurst","lyoner"],per:{scheibe:15}},
-    {n:"Schinken",k:215,p:30,s:["schinken","kochschinken"],per:{scheibe:20}},
-    {n:"Salami",k:350,p:20,s:["salami"],per:{scheibe:6}},
-    {n:"Bratwurst",k:280,p:120,s:["bratwurst","rostbratwurst"],per:{stück:120}},
-    {n:"Currywurst",k:330,p:150,s:["currywurst"]},
-    {n:"Würstchen",k:280,p:50,s:["würstchen","wiener","frankfurter","bockwurst"],per:{stück:50}},
-    {n:"Käse",k:350,p:30,s:["käse","gouda","emmentaler","cheddar","bergkäse"],per:{scheibe:25}},
-    {n:"Frischkäse",k:250,p:20,s:["frischkäse"],per:{el:20}},
-    {n:"Mozzarella",k:250,p:60,s:["mozzarella"]},
-    {n:"Feta",k:260,p:50,s:["feta"]},
-    {n:"Tofu",k:120,p:150,s:["tofu"]},
-    {n:"Milch",k:47,p:200,s:["milch"],per:{glas:200,flasche:500}},
-    {n:"Joghurt",k:60,p:150,s:["joghurt","jogurt"],per:{becher:150}},
-    {n:"Quark",k:70,p:200,s:["quark","magerquark"],per:{becher:200}},
-    {n:"Skyr",k:63,p:150,s:["skyr"],per:{becher:150}},
-    {n:"Butter",k:720,p:10,s:["butter"],per:{el:15,scheibe:8,tl:5}},
-    {n:"Sahne",k:290,p:15,s:["sahne","schlagsahne"],per:{el:15}},
-    {n:"Apfel",k:52,p:180,s:["apfel","äpfel"],per:{stück:180}},
-    {n:"Banane",k:90,p:120,s:["banane","bananen"],per:{stück:120}},
-    {n:"Orange",k:47,p:150,s:["orange","orangen","apfelsine"],per:{stück:150}},
-    {n:"Birne",k:57,p:160,s:["birne","birnen"],per:{stück:160}},
-    {n:"Trauben",k:70,p:100,s:["trauben","traube","weintrauben"],per:{handvoll:30}},
-    {n:"Erdbeeren",k:32,p:150,s:["erdbeeren","erdbeere"],per:{handvoll:40}},
-    {n:"Beeren",k:45,p:100,s:["beeren","blaubeeren","heidelbeeren","himbeeren","brombeeren"],per:{handvoll:30}},
-    {n:"Mandarine",k:46,p:70,s:["mandarine","mandarinen","clementine"],per:{stück:70}},
-    {n:"Kiwi",k:58,p:75,s:["kiwi"],per:{stück:75}},
-    {n:"Melone",k:35,p:200,s:["melone","wassermelone","honigmelone"],per:{stück:200}},
-    {n:"Ananas",k:50,p:120,s:["ananas"]},
-    {n:"Salat",k:20,p:100,s:["salat","blattsalat","kopfsalat","feldsalat","gemischter salat"],per:{teller:150,schüssel:150}},
-    {n:"Tomate",k:18,p:100,s:["tomate","tomaten"],per:{stück:90}},
-    {n:"Gurke",k:15,p:100,s:["gurke","salatgurke"],per:{stück:300,scheibe:8}},
-    {n:"Karotte",k:40,p:80,s:["karotte","karotten","möhre","möhren","mohrrübe"],per:{stück:70}},
-    {n:"Brokkoli",k:35,p:150,s:["brokkoli","broccoli"]},
-    {n:"Paprika",k:30,p:120,s:["paprika"],per:{stück:150}},
-    {n:"Avocado",k:160,p:100,s:["avocado"],per:{stück:150}},
-    {n:"Zwiebel",k:40,p:50,s:["zwiebel","zwiebeln"],per:{stück:70}},
-    {n:"Mais",k:90,p:100,s:["mais"],per:{dose:140}},
-    {n:"Spinat",k:23,p:150,s:["spinat"]},
-    {n:"Bohnen",k:95,p:150,s:["bohnen","kidneybohnen"],per:{dose:150}},
-    {n:"Linsen",k:115,p:150,s:["linsen"]},
-    {n:"Erbsen",k:80,p:100,s:["erbsen"]},
-    {n:"Schokolade",k:540,p:25,s:["schokolade","schoki","vollmilchschokolade","zartbitterschokolade"],per:{riegel:25,tafel:100,stück:6,reihe:20}},
-    {n:"Kekse",k:480,p:24,s:["keks","kekse","plätzchen","cookie","cookies"],per:{stück:12}},
-    {n:"Chips",k:530,p:30,s:["chips"],per:{handvoll:25,tüte:175}},
-    {n:"Gummibärchen",k:340,p:30,s:["gummibärchen","fruchtgummi","haribo"],per:{handvoll:25,tüte:200}},
-    {n:"Eis",k:200,p:100,s:["eis","eiscreme"],per:{kugel:50}},
-    {n:"Kuchen",k:370,p:100,s:["kuchen","marmorkuchen","käsekuchen"],per:{stück:100}},
-    {n:"Donut",k:280,p:60,s:["donut","doughnut"],per:{stück:60}},
-    {n:"Muffin",k:380,p:70,s:["muffin"],per:{stück:70}},
-    {n:"Müsliriegel",k:420,p:25,s:["müsliriegel","proteinriegel"],per:{riegel:25,stück:25}},
-    {n:"Nüsse",k:620,p:30,s:["nüsse","mandeln","walnüsse","cashews","cashew","haselnüsse","erdnüsse"],per:{handvoll:25}},
-    {n:"Popcorn",k:480,p:30,s:["popcorn"]},
-    {n:"Pizza",k:260,p:300,s:["pizza"],per:{stück:125}},
-    {n:"Burger",k:250,p:250,s:["burger","hamburger","cheeseburger"],per:{stück:220}},
-    {n:"Döner",k:215,p:350,s:["döner","dürüm","kebab"],per:{stück:350}},
-    {n:"Sushi",k:145,p:320,s:["sushi"],per:{stück:40}},
-    {n:"Lasagne",k:130,p:350,s:["lasagne"]},
-    {n:"Suppe",k:45,p:300,s:["suppe","gemüsesuppe","tomatensuppe"],per:{teller:300,tasse:200}},
-    {n:"Sandwich",k:250,p:200,s:["sandwich"],per:{stück:200}},
-    {n:"Wrap",k:210,p:200,s:["wrap"],per:{stück:200}},
-    {n:"Pfannkuchen",k:200,p:80,s:["pfannkuchen","pancakes","pancake","crepe"],per:{stück:80}},
-    {n:"Spätzle",k:170,p:200,s:["spätzle","spaetzle"]},
-    {n:"Wasser",k:0,p:200,s:["wasser","mineralwasser","sprudel"],per:{glas:200,flasche:500}},
-    {n:"Kaffee",k:5,p:150,s:["kaffee","espresso"],per:{tasse:150,becher:250}},
-    {n:"Cappuccino",k:55,p:150,s:["cappuccino","milchkaffee","latte"],per:{tasse:150,becher:250,glas:250}},
-    {n:"Tee",k:1,p:200,s:["tee"],per:{tasse:200,becher:250}},
-    {n:"Cola",k:42,p:200,s:["cola","softdrink"],per:{glas:200,dose:330,flasche:500}},
-    {n:"Limonade",k:40,p:200,s:["limonade","limo","fanta","sprite"],per:{glas:200,dose:330,flasche:500}},
-    {n:"Saft",k:46,p:200,s:["saft","orangensaft","apfelsaft","fruchtsaft"],per:{glas:200,flasche:500}},
-    {n:"Bier",k:43,p:330,s:["bier","pils","helles","weizen"],per:{glas:300,flasche:500,dose:500}},
-    {n:"Wein",k:82,p:150,s:["wein","rotwein","weißwein"],per:{glas:150,flasche:750}},
-    {n:"Smoothie",k:55,p:250,s:["smoothie"],per:{glas:250,flasche:250}},
-    {n:"Energydrink",k:46,p:250,s:["energydrink","red bull"],per:{dose:250}},
-    {n:"Milchshake",k:110,p:300,s:["milchshake","shake"],per:{glas:300}}
+    {n:"Nudeln",k:150,p:200,pr:5,cb:30,ft:1,s:["nudeln","pasta","spaghetti","spagetti","penne","makkaroni","fusilli","tagliatelle"],per:{teller:250}},
+    {n:"Reis",k:130,p:180,pr:2.7,cb:28,ft:0.3,s:["reis"],per:{teller:220}},
+    {n:"Kartoffeln",k:80,p:200,pr:2,cb:17,ft:0.1,s:["kartoffeln","kartoffel","salzkartoffeln","pellkartoffeln"]},
+    {n:"Pommes",k:290,p:150,pr:3.4,cb:41,ft:14,s:["pommes","fritten"]},
+    {n:"Brot",k:250,p:45,pr:8,cb:45,ft:3,s:["brot","vollkornbrot","graubrot","schwarzbrot","mischbrot"],per:{scheibe:45,stück:45}},
+    {n:"Toast",k:280,p:30,pr:8,cb:50,ft:4,s:["toast","toastbrot"],per:{scheibe:30,stück:30}},
+    {n:"Brötchen",k:270,p:55,pr:9,cb:50,ft:3,s:["brötchen","semmel","schrippe","weckle"],per:{stück:55}},
+    {n:"Croissant",k:400,p:60,pr:8,cb:45,ft:21,s:["croissant","gipfeli"],per:{stück:60}},
+    {n:"Müsli",k:360,p:60,pr:9,cb:60,ft:7,s:["müsli","muesli"],per:{schüssel:60,teller:60}},
+    {n:"Haferflocken",k:370,p:50,pr:13,cb:59,ft:7,s:["haferflocken","oats"]},
+    {n:"Porridge",k:90,p:250,pr:3,cb:14,ft:2,s:["porridge","haferbrei"],per:{teller:250,schüssel:250}},
+    {n:"Cornflakes",k:380,p:40,pr:7,cb:84,ft:1,s:["cornflakes"]},
+    {n:"Ei",k:130,p:60,pr:13,cb:1,ft:9,s:["ei","eier","spiegelei","frühstücksei"],per:{stück:60}},
+    {n:"Rührei",k:150,p:120,pr:11,cb:1.5,ft:11,s:["rührei","rühreier"]},
+    {n:"Omelett",k:155,p:150,pr:11,cb:1,ft:12,s:["omelett","omelette"]},
+    {n:"Hähnchen",k:165,p:150,pr:31,cb:0,ft:3.6,s:["hähnchenbrust","hühnerbrust","hähnchen","hühnchen","hendl","poulet","chicken"]},
+    {n:"Steak",k:250,p:150,pr:26,cb:0,ft:15,s:["steak","rindfleisch","rinderfilet","rind"]},
+    {n:"Schnitzel",k:290,p:150,pr:20,cb:15,ft:17,s:["schnitzel"],per:{stück:150}},
+    {n:"Schweinefleisch",k:280,p:150,pr:25,cb:0,ft:20,s:["schweinefleisch","schwein","kotelett","kassler"]},
+    {n:"Hackfleisch",k:240,p:125,pr:26,cb:0,ft:15,s:["hackfleisch","gehacktes","hack","mett"]},
+    {n:"Frikadelle",k:270,p:90,pr:18,cb:8,ft:18,s:["frikadelle","bulette","fleischküchle"],per:{stück:90}},
+    {n:"Lachs",k:200,p:150,pr:20,cb:0,ft:13,s:["lachs"]},
+    {n:"Fisch",k:130,p:150,pr:24,cb:0,ft:3,s:["fisch","seelachs","kabeljau","dorsch","scholle","forelle"]},
+    {n:"Thunfisch",k:130,p:120,pr:29,cb:0,ft:1,s:["thunfisch","tuna"],per:{dose:150}},
+    {n:"Wurst",k:300,p:30,pr:12,cb:1,ft:27,s:["wurst","fleischwurst","lyoner"],per:{scheibe:15}},
+    {n:"Schinken",k:215,p:30,pr:18,cb:1,ft:15,s:["schinken","kochschinken"],per:{scheibe:20}},
+    {n:"Salami",k:350,p:20,pr:22,cb:1,ft:29,s:["salami"],per:{scheibe:6}},
+    {n:"Bratwurst",k:280,p:120,pr:13,cb:1,ft:25,s:["bratwurst","rostbratwurst"],per:{stück:120}},
+    {n:"Currywurst",k:330,p:150,pr:12,cb:8,ft:27,s:["currywurst"]},
+    {n:"Würstchen",k:280,p:50,pr:12,cb:1,ft:25,s:["würstchen","wiener","frankfurter","bockwurst"],per:{stück:50}},
+    {n:"Käse",k:350,p:30,pr:25,cb:0,ft:28,s:["käse","gouda","emmentaler","cheddar","bergkäse"],per:{scheibe:25}},
+    {n:"Frischkäse",k:250,p:20,pr:6,cb:3,ft:24,s:["frischkäse"],per:{el:20}},
+    {n:"Mozzarella",k:250,p:60,pr:18,cb:1,ft:19,s:["mozzarella"]},
+    {n:"Feta",k:260,p:50,pr:14,cb:1,ft:21,s:["feta"]},
+    {n:"Tofu",k:120,p:150,pr:12,cb:2,ft:7,s:["tofu"]},
+    {n:"Milch",k:47,p:200,pr:3.4,cb:4.8,ft:1.5,s:["milch"],per:{glas:200,flasche:500}},
+    {n:"Joghurt",k:60,p:150,pr:3.5,cb:5,ft:3.5,s:["joghurt","jogurt"],per:{becher:150}},
+    {n:"Quark",k:70,p:200,pr:12,cb:4,ft:0.3,s:["quark","magerquark"],per:{becher:200}},
+    {n:"Skyr",k:63,p:150,pr:11,cb:4,ft:0.2,s:["skyr"],per:{becher:150}},
+    {n:"Butter",k:720,p:10,pr:0.7,cb:0.7,ft:81,s:["butter"],per:{el:15,scheibe:8,tl:5}},
+    {n:"Sahne",k:290,p:15,pr:2.4,cb:3.3,ft:30,s:["sahne","schlagsahne"],per:{el:15}},
+    {n:"Apfel",k:52,p:180,pr:0.3,cb:14,ft:0.2,s:["apfel","äpfel"],per:{stück:180}},
+    {n:"Banane",k:90,p:120,pr:1.1,cb:23,ft:0.3,s:["banane","bananen"],per:{stück:120}},
+    {n:"Orange",k:47,p:150,pr:0.9,cb:12,ft:0.1,s:["orange","orangen","apfelsine"],per:{stück:150}},
+    {n:"Birne",k:57,p:160,pr:0.4,cb:15,ft:0.1,s:["birne","birnen"],per:{stück:160}},
+    {n:"Trauben",k:70,p:100,pr:0.7,cb:18,ft:0.2,s:["trauben","traube","weintrauben"],per:{handvoll:30}},
+    {n:"Erdbeeren",k:32,p:150,pr:0.7,cb:8,ft:0.3,s:["erdbeeren","erdbeere"],per:{handvoll:40}},
+    {n:"Beeren",k:45,p:100,pr:0.7,cb:10,ft:0.3,s:["beeren","blaubeeren","heidelbeeren","himbeeren","brombeeren"],per:{handvoll:30}},
+    {n:"Mandarine",k:46,p:70,pr:0.8,cb:11,ft:0.3,s:["mandarine","mandarinen","clementine"],per:{stück:70}},
+    {n:"Kiwi",k:58,p:75,pr:1.1,cb:14,ft:0.5,s:["kiwi"],per:{stück:75}},
+    {n:"Melone",k:35,p:200,pr:0.6,cb:8,ft:0.2,s:["melone","wassermelone","honigmelone"],per:{stück:200}},
+    {n:"Ananas",k:50,p:120,pr:0.5,cb:13,ft:0.1,s:["ananas"]},
+    {n:"Salat",k:20,p:100,pr:1.4,cb:3,ft:0.2,s:["salat","blattsalat","kopfsalat","feldsalat","gemischter salat"],per:{teller:150,schüssel:150}},
+    {n:"Tomate",k:18,p:100,pr:0.9,cb:3.9,ft:0.2,s:["tomate","tomaten"],per:{stück:90}},
+    {n:"Gurke",k:15,p:100,pr:0.7,cb:3.6,ft:0.1,s:["gurke","salatgurke"],per:{stück:300,scheibe:8}},
+    {n:"Karotte",k:40,p:80,pr:0.9,cb:10,ft:0.2,s:["karotte","karotten","möhre","möhren","mohrrübe"],per:{stück:70}},
+    {n:"Brokkoli",k:35,p:150,pr:2.8,cb:7,ft:0.4,s:["brokkoli","broccoli"]},
+    {n:"Paprika",k:30,p:120,pr:1,cb:6,ft:0.3,s:["paprika"],per:{stück:150}},
+    {n:"Avocado",k:160,p:100,pr:2,cb:9,ft:13,s:["avocado"],per:{stück:150}},
+    {n:"Zwiebel",k:40,p:50,pr:1.1,cb:9,ft:0.1,s:["zwiebel","zwiebeln"],per:{stück:70}},
+    {n:"Mais",k:90,p:100,pr:3.4,cb:19,ft:1.2,s:["mais"],per:{dose:140}},
+    {n:"Spinat",k:23,p:150,pr:2.9,cb:3.6,ft:0.4,s:["spinat"]},
+    {n:"Bohnen",k:95,p:150,pr:6,cb:17,ft:0.5,s:["bohnen","kidneybohnen"],per:{dose:150}},
+    {n:"Linsen",k:115,p:150,pr:9,cb:20,ft:0.4,s:["linsen"]},
+    {n:"Erbsen",k:80,p:100,pr:5,cb:14,ft:0.4,s:["erbsen"]},
+    {n:"Schokolade",k:540,p:25,pr:7,cb:59,ft:30,s:["schokolade","schoki","vollmilchschokolade","zartbitterschokolade"],per:{riegel:25,tafel:100,stück:6,reihe:20}},
+    {n:"Kekse",k:480,p:24,pr:6,cb:65,ft:21,s:["keks","kekse","plätzchen","cookie","cookies"],per:{stück:12}},
+    {n:"Chips",k:530,p:30,pr:6,cb:53,ft:33,s:["chips"],per:{handvoll:25,tüte:175}},
+    {n:"Gummibärchen",k:340,p:30,pr:7,cb:77,ft:0.2,s:["gummibärchen","fruchtgummi","haribo"],per:{handvoll:25,tüte:200}},
+    {n:"Eis",k:200,p:100,pr:3.5,cb:24,ft:11,s:["eis","eiscreme"],per:{kugel:50}},
+    {n:"Kuchen",k:370,p:100,pr:5,cb:50,ft:17,s:["kuchen","marmorkuchen","käsekuchen"],per:{stück:100}},
+    {n:"Donut",k:280,p:60,pr:4,cb:38,ft:12,s:["donut","doughnut"],per:{stück:60}},
+    {n:"Muffin",k:380,p:70,pr:5,cb:50,ft:17,s:["muffin"],per:{stück:70}},
+    {n:"Müsliriegel",k:420,p:25,pr:8,cb:62,ft:15,s:["müsliriegel","proteinriegel"],per:{riegel:25,stück:25}},
+    {n:"Nüsse",k:620,p:30,pr:20,cb:20,ft:50,s:["nüsse","mandeln","walnüsse","cashews","cashew","haselnüsse","erdnüsse"],per:{handvoll:25}},
+    {n:"Popcorn",k:480,p:30,pr:9,cb:55,ft:22,s:["popcorn"]},
+    {n:"Pizza",k:260,p:300,pr:11,cb:30,ft:10,s:["pizza"],per:{stück:125}},
+    {n:"Burger",k:250,p:250,pr:13,cb:22,ft:11,s:["burger","hamburger","cheeseburger"],per:{stück:220}},
+    {n:"Döner",k:215,p:350,pr:14,cb:18,ft:8,s:["döner","dürüm","kebab"],per:{stück:350}},
+    {n:"Sushi",k:145,p:320,pr:6,cb:26,ft:1,s:["sushi"],per:{stück:40}},
+    {n:"Lasagne",k:130,p:350,pr:7,cb:12,ft:5,s:["lasagne"]},
+    {n:"Suppe",k:45,p:300,pr:2,cb:5,ft:1.5,s:["suppe","gemüsesuppe","tomatensuppe"],per:{teller:300,tasse:200}},
+    {n:"Sandwich",k:250,p:200,pr:11,cb:28,ft:9,s:["sandwich"],per:{stück:200}},
+    {n:"Wrap",k:210,p:200,pr:8,cb:26,ft:7,s:["wrap"],per:{stück:200}},
+    {n:"Pfannkuchen",k:200,p:80,pr:6,cb:28,ft:6,s:["pfannkuchen","pancakes","pancake","crepe"],per:{stück:80}},
+    {n:"Spätzle",k:170,p:200,pr:6,cb:28,ft:3,s:["spätzle","spaetzle"]},
+    {n:"Wasser",k:0,p:200,pr:0,cb:0,ft:0,s:["wasser","mineralwasser","sprudel"],per:{glas:200,flasche:500}},
+    {n:"Kaffee",k:5,p:150,pr:0.1,cb:0.3,ft:0,s:["kaffee","espresso"],per:{tasse:150,becher:250}},
+    {n:"Cappuccino",k:55,p:150,pr:3,cb:5,ft:2.5,s:["cappuccino","milchkaffee","latte"],per:{tasse:150,becher:250,glas:250}},
+    {n:"Tee",k:1,p:200,pr:0,cb:0,ft:0,s:["tee"],per:{tasse:200,becher:250}},
+    {n:"Cola",k:42,p:200,pr:0,cb:10.6,ft:0,s:["cola","softdrink"],per:{glas:200,dose:330,flasche:500}},
+    {n:"Limonade",k:40,p:200,pr:0,cb:10,ft:0,s:["limonade","limo","fanta","sprite"],per:{glas:200,dose:330,flasche:500}},
+    {n:"Saft",k:46,p:200,pr:0.5,cb:11,ft:0.1,s:["saft","orangensaft","apfelsaft","fruchtsaft"],per:{glas:200,flasche:500}},
+    {n:"Bier",k:43,p:330,pr:0.5,cb:3.6,ft:0,s:["bier","pils","helles","weizen"],per:{glas:300,flasche:500,dose:500}},
+    {n:"Wein",k:82,p:150,pr:0.1,cb:2.6,ft:0,s:["wein","rotwein","weißwein"],per:{glas:150,flasche:750}},
+    {n:"Smoothie",k:55,p:250,pr:1,cb:12,ft:0.3,s:["smoothie"],per:{glas:250,flasche:250}},
+    {n:"Energydrink",k:46,p:250,pr:0,cb:11,ft:0,s:["energydrink","red bull"],per:{dose:250}},
+    {n:"Milchshake",k:110,p:300,pr:3.5,cb:18,ft:3,s:["milchshake","shake"],per:{glas:300}}
   ];
 
   // Synonyme, längste zuerst (für längste Übereinstimmung)
@@ -496,9 +548,12 @@
         } else base=food.p;
         grams=useQty*base*size;
       }
-      return { name:food.n, grams:Math.round(grams), kcal:Math.round(grams/100*food.k) };
+      const f=grams/100;
+      return { name:food.n, grams:Math.round(grams), kcal:Math.round(f*food.k),
+               pr:Math.round(f*food.pr), cb:Math.round(f*food.cb), ft:Math.round(f*food.ft) };
     });
     const kcal=items.reduce((a,b)=>a+b.kcal,0);
+    const pr=items.reduce((a,b)=>a+b.pr,0), cb=items.reduce((a,b)=>a+b.cb,0), ft=items.reduce((a,b)=>a+b.ft,0);
     let label;
     if(items.length===1){
       if(gramsExpl!=null){
@@ -509,7 +564,7 @@
         label = q + items[0].name + qual;
       }
     } else label = items.map(x=>x.name).join(" + ");
-    return { label, kcal };
+    return { label, kcal, pr, cb, ft };
   }
 
   // ============ State ============
@@ -533,11 +588,14 @@
   });
 
   // ============ Add / delete / edit ============
-  function addEntry(name,kcal,meal){
+  function addEntry(name,kcal,meal,macros){
     name=(name||"").trim(); if(!name) return null;
     let k=parseInt(kcal,10); if(isNaN(k)||k<0) k=0;
+    const m=macros||{};
+    const num=v=>{ const n=parseFloat(v); return (isNaN(n)||n<0)?0:Math.round(n); };
     const id=Date.now()+"-"+Math.random().toString(36).slice(2,7);
-    entries.push({ id, name, kcal:k, meal:meal||selectedMeal, date:viewDate, ts:Date.now() });
+    entries.push({ id, name, kcal:k, pr:num(m.pr), cb:num(m.cb), ft:num(m.ft),
+                   meal:meal||selectedMeal, date:viewDate, ts:Date.now() });
     save(STORE_KEY,entries); lastAddedId=id; render(); return id;
   }
   function removeEntry(id){ entries=entries.filter(x=>x.id!==id); save(STORE_KEY,entries); render(); }
@@ -571,10 +629,10 @@
     if(!text){ aiInput.focus(); return; }
     const est=estimate(text);
     if(est){
-      addEntry(est.label, est.kcal, selectedMeal);
+      addEntry(est.label, est.kcal, selectedMeal, {pr:est.pr,cb:est.cb,ft:est.ft});
       aiInput.value="";
       const id=lastAddedId;
-      toast("≈ "+est.kcal.toLocaleString("de-DE")+" kcal · "+est.label, "Rückgängig", ()=>removeEntry(id));
+      toast("≈ "+est.kcal.toLocaleString("de-DE")+" kcal · E "+est.pr+" g", "Rückgängig", ()=>removeEntry(id));
       if(window.matchMedia("(pointer:fine)").matches) aiInput.focus();
     } else {
       // nicht erkannt -> manuelle Eingabe vorbefüllen
@@ -586,28 +644,28 @@
   aiInput.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); doEstimate(); } });
 
   // ============ Manual ============
-  function showManual(on){ $("manualRow").style.display=on?"flex":"none"; }
+  function showManual(on){ $("manualRow").style.display=on?"block":"none"; }
   $("toggleManual").addEventListener("click",()=>{ const r=$("manualRow"); showManual(r.style.display==="none"); if(r.style.display!=="none") $("nameM").focus(); });
   function manualAdd(){
     const name=$("nameM").value.trim(); if(!name){ $("nameM").focus(); return; }
-    addEntry(name,$("kcalM").value,selectedMeal);
-    $("nameM").value=""; $("kcalM").value=""; $("nameM").focus();
+    addEntry(name,$("kcalM").value,selectedMeal,{pr:$("prM").value,cb:$("cbM").value,ft:$("ftM").value});
+    ["nameM","kcalM","prM","cbM","ftM"].forEach(id=>$(id).value=""); $("nameM").focus();
   }
   $("addM").addEventListener("click",manualAdd);
   $("nameM").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("kcalM").focus(); }});
-  $("kcalM").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); manualAdd(); }});
+  ["kcalM","prM","cbM","ftM"].forEach(id=>$(id).addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); manualAdd(); }}));
 
   // ============ Recent chips ============
   function renderRecent(){
     const wrap=$("recentWrap"), chips=$("recentChips"), seen=new Map();
-    [...entries].sort((a,b)=>b.ts-a.ts).forEach(e=>{ const k=e.name.toLowerCase(); if(!seen.has(k)) seen.set(k,{name:e.name,kcal:e.kcal}); });
+    [...entries].sort((a,b)=>b.ts-a.ts).forEach(e=>{ const k=e.name.toLowerCase(); if(!seen.has(k)) seen.set(k,{name:e.name,kcal:e.kcal,pr:e.pr||0,cb:e.cb||0,ft:e.ft||0}); });
     const today=new Set(entries.filter(e=>e.date===viewDate).map(e=>e.name.toLowerCase()));
     const list=[...seen.values()].filter(x=>!today.has(x.name.toLowerCase())).slice(0,8);
     if(!list.length){ wrap.style.display="none"; return; }
     wrap.style.display="block";
-    chips.innerHTML=list.map(x=>`<button class="chip" data-name="${esc(x.name)}" data-kcal="${x.kcal}">${esc(x.name)}${x.kcal?` <span class="ck">${x.kcal}</span>`:""}</button>`).join("");
+    chips.innerHTML=list.map(x=>`<button class="chip" data-name="${esc(x.name)}" data-kcal="${x.kcal}" data-pr="${x.pr}" data-cb="${x.cb}" data-ft="${x.ft}">${esc(x.name)}${x.kcal?` <span class="ck">${x.kcal}</span>`:""}</button>`).join("");
   }
-  $("recentChips").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return; addEntry(c.dataset.name,c.dataset.kcal,selectedMeal); });
+  $("recentChips").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return; addEntry(c.dataset.name,c.dataset.kcal,selectedMeal,{pr:c.dataset.pr,cb:c.dataset.cb,ft:c.dataset.ft}); });
 
   // ============ Date nav ============
   $("prevDay").addEventListener("click",()=>shiftDay(-1));
@@ -675,6 +733,12 @@
   function stopCamera(){ if(scanTimer){ clearInterval(scanTimer); scanTimer=null; } if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } $("camWrap").classList.remove("on"); }
 
   function parseServingGrams(str){ if(!str) return null; const m=String(str).match(/(\d+(?:[.,]\d+)?)\s*(g|ml)/i); return m?parseFloat(m[1].replace(",",".")):null; }
+  // Nährwert aus OFF passend zur kcal-Basis (Portion oder 100 g)
+  function nutri(n, key, useServing, sg){
+    if(useServing && n[key+"_serving"]!=null) return Math.round(n[key+"_serving"]);
+    if(n[key+"_100g"]!=null) return Math.round(n[key+"_100g"] * (sg? sg/100 : 1));
+    return 0;
+  }
 
   function lookupBarcode(code){
     stopCamera(); showProdCard(false); setStatus("Suche Produkt …");
@@ -683,23 +747,32 @@
       if(!data||data.status!==1||!data.product){ setStatus("Produkt nicht gefunden. Du kannst es unten manuell eintragen."); showManualProd(code); return; }
       const p=data.product, n=p.nutriments||{};
       let name=(p.product_name||"Produkt").trim(); if(p.brands) name+=" ("+p.brands.split(",")[0].trim()+")";
-      let kcal=null, basis="";
-      if(n["energy-kcal_serving"]!=null){ kcal=Math.round(n["energy-kcal_serving"]); basis="pro Portion"+(p.serving_size?" ("+p.serving_size+")":""); }
+      let kcal=null, basis="", useServing=false, sg=parseServingGrams(p.serving_size);
+      if(n["energy-kcal_serving"]!=null){ kcal=Math.round(n["energy-kcal_serving"]); basis="pro Portion"+(p.serving_size?" ("+p.serving_size+")":""); useServing=true; }
       else if(n["energy-kcal_100g"]!=null){
-        const sg=parseServingGrams(p.serving_size);
         if(sg){ kcal=Math.round(n["energy-kcal_100g"]*sg/100); basis="pro Portion ("+sg+" g)"; }
         else { kcal=Math.round(n["energy-kcal_100g"]); basis="pro 100 g – bitte anpassen"; }
       }
       if(kcal==null){ setStatus("Für dieses Produkt sind keine Kalorien hinterlegt. Bitte manuell eintragen."); showManualProd(code, name); return; }
+      const macros={
+        pr: nutri(n,"proteins",useServing,sg),
+        cb: nutri(n,"carbohydrates",useServing,sg),
+        ft: nutri(n,"fat",useServing,sg)
+      };
       setStatus("Gefunden ✓ – prüfen und eintragen:");
-      fillProd(name, kcal, basis);
+      fillProd(name, kcal, basis, macros);
     }).catch(()=>{ setStatus("Keine Verbindung zur Produktdatenbank. Bitte manuell eintragen."); showManualProd(code); });
   }
-  function fillProd(name,kcal,basis){ $("prodName").value=name; $("prodKcal").value=kcal; $("prodBasis").textContent=basis||""; showProdCard(true); }
-  function showManualProd(code,name){ fillProd(name||("Produkt "+code), "", ""); }
+  function fillProd(name,kcal,basis,macros){
+    macros=macros||{};
+    $("prodName").value=name; $("prodKcal").value=kcal; $("prodBasis").textContent=basis||"";
+    $("prodPr").value=macros.pr!=null?macros.pr:""; $("prodCb").value=macros.cb!=null?macros.cb:""; $("prodFt").value=macros.ft!=null?macros.ft:"";
+    showProdCard(true);
+  }
+  function showManualProd(code,name){ fillProd(name||("Produkt "+code), "", "", {}); }
   $("prodAdd").addEventListener("click",()=>{
     const name=$("prodName").value.trim()||"Produkt"; const kcal=parseInt($("prodKcal").value,10);
-    addEntry(name, isNaN(kcal)?0:kcal, selectedMeal);
+    addEntry(name, isNaN(kcal)?0:kcal, selectedMeal, {pr:$("prodPr").value,cb:$("prodCb").value,ft:$("prodFt").value});
     scanDialog.close();
     toast(name+" hinzugefügt");
   });
@@ -720,6 +793,16 @@
     fill.style.transition="stroke-dashoffset .5s ease, stroke .3s";
     fill.style.stroke = (total>goal&&goal>0)?"var(--over)":(pct>0.85?"var(--warn)":"var(--accent)");
 
+    // Makro-Summen des Tages
+    const tPr=day.reduce((s,e)=>s+(e.pr||0),0), tCb=day.reduce((s,e)=>s+(e.cb||0),0), tFt=day.reduce((s,e)=>s+(e.ft||0),0);
+    $("protVal").textContent=tPr.toLocaleString("de-DE")+" g";
+    $("carbVal").textContent=tCb.toLocaleString("de-DE")+" g";
+    $("fatVal").textContent=tFt.toLocaleString("de-DE")+" g";
+    // Verteilungsbalken nach Energieanteil (Eiweiß/KH 4 kcal/g, Fett 9 kcal/g)
+    const eP=tPr*4, eC=tCb*4, eF=tFt*9, eTot=eP+eC+eF;
+    const wP=eTot?eP/eTot*100:0, wC=eTot?eC/eTot*100:0, wF=eTot?eF/eTot*100:0;
+    $("segP").style.width=wP+"%"; $("segC").style.width=wC+"%"; $("segF").style.width=wF+"%";
+
     if(!day.length){
       entriesEl.innerHTML=`<div class="empty"><div class="big">🍽️</div>Noch nichts getrackt.<br>Tipp oben einfach ein, was du gegessen hast.</div>`;
     } else {
@@ -729,7 +812,9 @@
         const gk=list.reduce((s,e)=>s+e.kcal,0);
         html+=`<div class="group"><div class="group-head"><span class="gname"><span class="emoji">${MEAL_EMOJI[meal]||"🍴"}</span>${meal}</span><span class="gkcal">${gk.toLocaleString("de-DE")} kcal</span></div>`;
         list.forEach(e=>{
-          html+=`<div class="entry"><span class="ename">${esc(e.name)}</span><span class="ekcal" data-id="${e.id}" title="Kalorien ändern">${e.kcal?e.kcal.toLocaleString("de-DE")+" kcal":"kcal +"}</span><button class="del" data-id="${e.id}" aria-label="Löschen">×</button></div>`;
+          const hasMacro=(e.pr||0)+(e.cb||0)+(e.ft||0)>0;
+          const macroLine=hasMacro?`<div class="emacro">E <b>${e.pr||0} g</b> · K <b>${e.cb||0} g</b> · F <b>${e.ft||0} g</b></div>`:"";
+          html+=`<div class="entry"><span class="col"><span class="ename">${esc(e.name)}</span>${macroLine}</span><span class="ekcal" data-id="${e.id}" title="Kalorien ändern">${e.kcal?e.kcal.toLocaleString("de-DE")+" kcal":"kcal +"}</span><button class="del" data-id="${e.id}" aria-label="Löschen">×</button></div>`;
         });
         html+=`</div>`;
       });

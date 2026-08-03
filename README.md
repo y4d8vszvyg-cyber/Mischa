@@ -18,6 +18,10 @@ Installation, kein Login, kein Server.
 - **Barcode-Scanner:** Strichcode verpackter Produkte scannen (Kamera) oder die
   Nummer manuell eingeben – die Nährwerte kommen live aus der freien
   [Open-Food-Facts](https://world.openfoodfacts.org)-Datenbank.
+- **Nährwerte:** Neben Kalorien werden auch **Eiweiß, Kohlenhydrate und Fett**
+  erfasst – als Tagessumme mit Energie-Verteilungsbalken, pro Mahlzeit und pro
+  Eintrag ablesbar. Kommen automatisch aus dem Schätzer und dem Barcode-Import;
+  bei manueller Eingabe optional selbst eintragbar.
 - Mahlzeiten nach Frühstück / Mittag / Abend / Snack gruppiert
 - Tagesziel mit Fortschritts-Ring und „verbleibenden" Kalorien
 - Kalorien eines Eintrags per Tipp nachträglich anpassen
