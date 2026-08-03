@@ -74,23 +74,23 @@
   .sm-row .val{ font-size:15px; font-weight:700;}
   .goal-edit{ background:none;border:none;color:var(--accent);font-size:12px; cursor:pointer;padding:0;font-weight:600; text-decoration:underline; text-underline-offset:2px;}
 
-  /* Makros */
+  /* Makros mit Zielfortschritt */
   .macros{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-    padding:15px 16px; margin:-8px 0 22px;
+    padding:16px; margin:-8px 0 22px;
   }
-  .macro{ text-align:center; }
-  .macro .mtop{ display:flex; align-items:center; justify-content:center; gap:6px; }
-  .macro .mv{ font-size:18px; font-weight:800; letter-spacing:-0.02em; }
-  .macro .ml{ font-size:11px; color:var(--muted); margin-top:2px; font-weight:600; }
-  .macro .mtop span[class^="dot-"]{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .macro .ml{ font-size:11.5px; color:var(--muted); font-weight:600; display:flex; align-items:center; gap:5px; justify-content:center; }
+  .macro .ml span[class^="dot-"]{ width:8px; height:8px; border-radius:50%; display:inline-block; }
   .dot-p{ background:var(--accent);} .dot-c{ background:var(--blue);} .dot-f{ background:var(--warn);}
-  .macro-bar{ grid-column:1/-1; display:flex; height:8px; border-radius:6px; overflow:hidden; background:var(--bg-soft); margin-top:4px; }
-  .macro-bar .seg{ height:100%; transition:width .5s ease; }
-  .seg-p{ background:var(--accent);} .seg-c{ background:var(--blue);} .seg-f{ background:var(--warn);}
+  .macro .mv{ text-align:center; font-size:16px; font-weight:800; letter-spacing:-0.02em; margin:5px 0 7px; }
+  .macro .mgoal{ font-size:12px; color:var(--muted); font-weight:600; }
+  .mbar{ height:6px; border-radius:5px; background:var(--bg-soft); overflow:hidden; }
+  .mfill{ display:block; height:100%; width:0; border-radius:5px; transition:width .5s ease; }
+  .mfill-p{ background:var(--accent);} .mfill-c{ background:var(--blue);} .mfill-f{ background:var(--warn);}
   .macro-inputs{ display:flex; gap:8px; margin-top:8px; }
   .macro-inputs .in{ padding:11px 10px; font-size:14px; text-align:center; }
+  .glab{ display:block; font-size:12px; color:var(--muted); font-weight:600; margin-bottom:6px; }
 
   .quick{ background:var(--card); border:1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 18px; }
   .quick h3{ margin:0 0 12px; font-size:13px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.05em;}
@@ -245,22 +245,22 @@
     </div>
   </div>
 
-  <!-- Nährwerte / Makros -->
+  <!-- Nährwerte / Makros mit Tagesziel -->
   <div class="macros">
     <div class="macro">
-      <div class="mtop"><span class="dot-p"></span><span class="mv" id="protVal">0 g</span></div>
-      <div class="ml">Eiweiß</div>
+      <div class="ml"><span class="dot-p"></span>Eiweiß</div>
+      <div class="mv"><span id="protVal">0</span><span class="mgoal"> / <span id="protGoal">0</span> g</span></div>
+      <div class="mbar"><span class="mfill mfill-p" id="protBar"></span></div>
     </div>
     <div class="macro">
-      <div class="mtop"><span class="dot-c"></span><span class="mv" id="carbVal">0 g</span></div>
-      <div class="ml">Kohlenhydrate</div>
+      <div class="ml"><span class="dot-c"></span>Kohlenh.</div>
+      <div class="mv"><span id="carbVal">0</span><span class="mgoal"> / <span id="carbGoal">0</span> g</span></div>
+      <div class="mbar"><span class="mfill mfill-c" id="carbBar"></span></div>
     </div>
     <div class="macro">
-      <div class="mtop"><span class="dot-f"></span><span class="mv" id="fatVal">0 g</span></div>
-      <div class="ml">Fett</div>
-    </div>
-    <div class="macro-bar" id="macroBar" title="Energie-Verteilung">
-      <span class="seg seg-p" id="segP"></span><span class="seg seg-c" id="segC"></span><span class="seg seg-f" id="segF"></span>
+      <div class="ml"><span class="dot-f"></span>Fett</div>
+      <div class="mv"><span id="fatVal">0</span><span class="mgoal"> / <span id="fatGoal">0</span> g</span></div>
+      <div class="mbar"><span class="mfill mfill-f" id="fatBar"></span></div>
     </div>
   </div>
 
@@ -317,9 +317,16 @@
 
 <!-- Goal dialog -->
 <dialog id="goalDialog">
-  <h4>🎯 Tagesziel festlegen</h4>
-  <p>Wie viele Kalorien möchtest du pro Tag maximal zu dir nehmen?</p>
+  <h4>🎯 Tagesziele festlegen</h4>
+  <p>Kalorien und – wenn du magst – Ziele für Eiweiß, Kohlenhydrate und Fett.</p>
+  <label class="glab">Kalorien pro Tag</label>
   <input class="in" id="goalInput" type="number" inputmode="numeric" min="0" step="50" placeholder="z. B. 2000">
+  <label class="glab" style="margin-top:14px;">Nährstoff-Ziele in Gramm</label>
+  <div class="macro-inputs">
+    <input class="in" id="goalPr" type="number" inputmode="numeric" min="0" step="1" placeholder="Eiweiß">
+    <input class="in" id="goalCb" type="number" inputmode="numeric" min="0" step="1" placeholder="Kohlenh.">
+    <input class="in" id="goalFt" type="number" inputmode="numeric" min="0" step="1" placeholder="Fett">
+  </div>
   <div class="dlg-actions">
     <button class="btn-cancel" id="goalCancel">Abbrechen</button>
     <button class="btn-ok" id="goalSave">Speichern</button>
@@ -358,7 +365,7 @@
 <script>
 (function(){
   "use strict";
-  const STORE_KEY="snack.entries.v1", GOAL_KEY="snack.goal.v1", MEAL_KEY="snack.lastmeal.v1";
+  const STORE_KEY="snack.entries.v1", GOAL_KEY="snack.goal.v1", MEAL_KEY="snack.lastmeal.v1", MG_KEY="snack.macrogoals.v1";
   const MEAL_EMOJI={ "Frühstück":"🍳","Mittag":"🍲","Abend":"🌙","Snack":"🍎" };
   const MEAL_ORDER=["Frühstück","Mittag","Abend","Snack"];
   const RING_CIRC=2*Math.PI*46;
@@ -568,7 +575,10 @@
   }
 
   // ============ State ============
+  // Standard-Makroziele aus dem Kalorienziel ableiten (25 % Eiweiß, 45 % KH, 30 % Fett)
+  function deriveMG(g){ return { pr:Math.round(g*0.25/4), cb:Math.round(g*0.45/4), ft:Math.round(g*0.30/9) }; }
   let entries=load(STORE_KEY,[]), goal=load(GOAL_KEY,2000), selectedMeal=load(MEAL_KEY,mealByTime());
+  let mgoals=load(MG_KEY, deriveMG(goal));
   let viewDate=todayKey(), lastAddedId=null, toastTimer=null;
 
   function load(k,def){ try{ const v=localStorage.getItem(k); return v===null?def:JSON.parse(v);}catch(e){return def;} }
@@ -682,13 +692,19 @@
 
   // ============ Goal dialog ============
   const goalDialog=$("goalDialog"), goalInput=$("goalInput");
+  const posInt=v=>{ const n=parseInt(v,10); return (isNaN(n)||n<0)?0:n; };
   $("editGoal").addEventListener("click",()=>{
-    goalInput.value=goal;
+    goalInput.value=goal; $("goalPr").value=mgoals.pr; $("goalCb").value=mgoals.cb; $("goalFt").value=mgoals.ft;
     if(typeof goalDialog.showModal==="function"){ goalDialog.showModal(); setTimeout(()=>goalInput.select(),50); }
-    else { const v=prompt("Tagesziel (kcal):",goal); if(v!==null){ goal=Math.max(0,parseInt(v,10)||0); save(GOAL_KEY,goal); render(); } }
+    else { const v=prompt("Tagesziel (kcal):",goal); if(v!==null){ goal=posInt(v); save(GOAL_KEY,goal); render(); } }
   });
   $("goalCancel").addEventListener("click",()=>goalDialog.close());
-  $("goalSave").addEventListener("click",()=>{ const v=parseInt(goalInput.value,10); goal=(isNaN(v)||v<0)?0:v; save(GOAL_KEY,goal); goalDialog.close(); render(); });
+  $("goalSave").addEventListener("click",()=>{
+    goal=posInt(goalInput.value);
+    mgoals={ pr:posInt($("goalPr").value), cb:posInt($("goalCb").value), ft:posInt($("goalFt").value) };
+    save(GOAL_KEY,goal); save(MG_KEY,mgoals);
+    goalDialog.close(); render();
+  });
   goalDialog.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("goalSave").click(); }});
 
   // ============ Barcode scanner ============
@@ -793,15 +809,16 @@
     fill.style.transition="stroke-dashoffset .5s ease, stroke .3s";
     fill.style.stroke = (total>goal&&goal>0)?"var(--over)":(pct>0.85?"var(--warn)":"var(--accent)");
 
-    // Makro-Summen des Tages
+    // Makro-Summen des Tages inkl. Zielfortschritt
     const tPr=day.reduce((s,e)=>s+(e.pr||0),0), tCb=day.reduce((s,e)=>s+(e.cb||0),0), tFt=day.reduce((s,e)=>s+(e.ft||0),0);
-    $("protVal").textContent=tPr.toLocaleString("de-DE")+" g";
-    $("carbVal").textContent=tCb.toLocaleString("de-DE")+" g";
-    $("fatVal").textContent=tFt.toLocaleString("de-DE")+" g";
-    // Verteilungsbalken nach Energieanteil (Eiweiß/KH 4 kcal/g, Fett 9 kcal/g)
-    const eP=tPr*4, eC=tCb*4, eF=tFt*9, eTot=eP+eC+eF;
-    const wP=eTot?eP/eTot*100:0, wC=eTot?eC/eTot*100:0, wF=eTot?eF/eTot*100:0;
-    $("segP").style.width=wP+"%"; $("segC").style.width=wC+"%"; $("segF").style.width=wF+"%";
+    const setMacro=(valId,goalId,barId,val,gv)=>{
+      $(valId).textContent=val.toLocaleString("de-DE");
+      $(goalId).textContent=(gv||0).toLocaleString("de-DE");
+      $(barId).style.width=(gv>0?Math.min(val/gv,1)*100:0)+"%";
+    };
+    setMacro("protVal","protGoal","protBar",tPr,mgoals.pr);
+    setMacro("carbVal","carbGoal","carbBar",tCb,mgoals.cb);
+    setMacro("fatVal","fatGoal","fatBar",tFt,mgoals.ft);
 
     if(!day.length){
       entriesEl.innerHTML=`<div class="empty"><div class="big">🍽️</div>Noch nichts getrackt.<br>Tipp oben einfach ein, was du gegessen hast.</div>`;

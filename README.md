@@ -24,6 +24,9 @@ Installation, kein Login, kein Server.
   bei manueller Eingabe optional selbst eintragbar.
 - Mahlzeiten nach Frühstück / Mittag / Abend / Snack gruppiert
 - Tagesziel mit Fortschritts-Ring und „verbleibenden" Kalorien
+- **Makro-Tagesziele:** eigene Ziele für Eiweiß, Kohlenhydrate und Fett mit
+  Fortschrittsbalken pro Nährstoff (Standardwerte werden aus dem Kalorienziel
+  abgeleitet, alles im Ziel-Dialog anpassbar)
 - Kalorien eines Eintrags per Tipp nachträglich anpassen
 - Zwischen Tagen blättern; „Zuletzt gegessen"-Chips zum Ein-Tipp-Nachtragen
 - Alles wird lokal im Browser gespeichert (localStorage) – keine Cloud
