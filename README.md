@@ -10,11 +10,24 @@ Tracken von Mahlzeiten.
 Installation, kein Login, kein Server.
 
 **Funktionen:**
-- Essen mit einem Klick eintragen (Name + optional Kalorien)
+- **KI-Freitexteingabe:** Einfach tippen, was du gegessen hast – z. B.
+  „eine kleine Portion Nudeln", „2 Eier", „großes Glas Cola" oder „150 g Reis".
+  Menge, Portionsgröße und Lebensmittel werden erkannt und die Kalorien
+  automatisch geschätzt (rund 100 gängige Lebensmittel, funktioniert offline,
+  ohne Konto).
+- **Barcode-Scanner:** Strichcode verpackter Produkte scannen (Kamera) oder die
+  Nummer manuell eingeben – die Nährwerte kommen live aus der freien
+  [Open-Food-Facts](https://world.openfoodfacts.org)-Datenbank.
 - Mahlzeiten nach Frühstück / Mittag / Abend / Snack gruppiert
 - Tagesziel mit Fortschritts-Ring und „verbleibenden" Kalorien
-- Zwischen Tagen blättern
-- „Zuletzt gegessen"-Chips zum Ein-Tipp-Nachtragen
+- Kalorien eines Eintrags per Tipp nachträglich anpassen
+- Zwischen Tagen blättern; „Zuletzt gegessen"-Chips zum Ein-Tipp-Nachtragen
 - Alles wird lokal im Browser gespeichert (localStorage) – keine Cloud
 
-Optimiert für's Handy, funktioniert offline.
+Optimiert für's Handy. Der Freitext-Schätzer läuft komplett offline.
+
+**Hinweis zum Barcode-Scanner:** Der Live-Kamera-Scan braucht eine sichere
+Verbindung (https). Beim reinen Öffnen per Doppelklick (`file://`) sperren
+Browser die Kamera – dann einfach die Barcode-Nummer manuell eintippen (das
+funktioniert überall). Für den Kamera-Scan die Datei über https bereitstellen
+(z. B. GitHub Pages).

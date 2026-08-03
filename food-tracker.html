@@ -17,6 +17,7 @@
     --accent: #4ade80;
     --accent-dim: #2c9e5a;
     --accent-ink: #06231a;
+    --blue: #60a5fa;
     --warn: #fbbf24;
     --over: #f87171;
     --radius: 16px;
@@ -35,19 +36,10 @@
     min-height: 100vh;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
   }
-  .app{
-    width:100%;
-    max-width: 520px;
-    margin: 0 auto;
-    padding: 20px 18px 140px;
-  }
+  .app{ width:100%; max-width: 520px; margin: 0 auto; padding: 20px 18px 140px; }
 
-  /* Header */
   header{ margin-bottom: 18px; }
-  .brand{
-    display:flex; align-items:center; gap:9px;
-    font-weight:700; font-size:19px; letter-spacing:-0.02em;
-  }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; font-size:19px; letter-spacing:-0.02em; }
   .brand .dot{
     width:26px;height:26px;border-radius:9px;
     background: linear-gradient(140deg, var(--accent), #22c55e);
@@ -55,41 +47,24 @@
     box-shadow: 0 4px 12px rgba(74,222,128,0.4);
   }
 
-  /* Date navigation */
-  .datebar{
-    display:flex; align-items:center; justify-content:space-between;
-    margin: 16px 0 4px;
-  }
-  .datebar h2{
-    margin:0; font-size:15px; font-weight:600; color:var(--text);
-    text-align:center; line-height:1.2;
-  }
+  .datebar{ display:flex; align-items:center; justify-content:space-between; margin: 16px 0 4px; }
+  .datebar h2{ margin:0; font-size:15px; font-weight:600; text-align:center; line-height:1.2; }
   .datebar h2 small{ display:block; font-size:12px; color:var(--muted); font-weight:500; margin-top:2px;}
   .navbtn{
-    width:40px;height:40px;border-radius:12px;
-    background:var(--card); border:1px solid var(--line); color:var(--text);
-    font-size:18px; cursor:pointer; display:flex;align-items:center;justify-content:center;
-    transition: background .15s;
+    width:40px;height:40px;border-radius:12px; background:var(--card); border:1px solid var(--line); color:var(--text);
+    font-size:18px; cursor:pointer; display:flex;align-items:center;justify-content:center; transition: background .15s;
   }
   .navbtn:active{ background:var(--card-hi); }
   .navbtn:disabled{ opacity:.3; cursor:default; }
 
-  /* Summary ring card */
   .summary{
     background: linear-gradient(160deg, var(--card), var(--bg-soft));
-    border:1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin: 14px 0 22px;
-    display:flex; align-items:center; gap:20px;
-    box-shadow: var(--shadow);
+    border:1px solid var(--line); border-radius: var(--radius); padding: 20px;
+    margin: 14px 0 22px; display:flex; align-items:center; gap:20px; box-shadow: var(--shadow);
   }
   .ring{ position:relative; flex-shrink:0; width:104px; height:104px; }
   .ring svg{ transform: rotate(-90deg); }
-  .ring .center{
-    position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center;
-  }
+  .ring .center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
   .ring .kcal{ font-size:23px; font-weight:800; letter-spacing:-0.03em; line-height:1;}
   .ring .kcal small{ font-size:11px; color:var(--muted); font-weight:600;}
   .sm-meta{ flex:1; }
@@ -97,112 +72,121 @@
   .sm-row:last-child{ margin-bottom:0;}
   .sm-row .lbl{ font-size:13px; color:var(--muted);}
   .sm-row .val{ font-size:15px; font-weight:700;}
-  .goal-edit{
-    background:none;border:none;color:var(--accent);font-size:12px;
-    cursor:pointer;padding:0;font-weight:600; text-decoration:underline; text-underline-offset:2px;
-  }
+  .goal-edit{ background:none;border:none;color:var(--accent);font-size:12px; cursor:pointer;padding:0;font-weight:600; text-decoration:underline; text-underline-offset:2px;}
 
-  /* Quick add form */
-  .quick{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 18px;
-  }
+  .quick{ background:var(--card); border:1px solid var(--line); border-radius: var(--radius); padding: 14px; margin-bottom: 18px; }
   .quick h3{ margin:0 0 12px; font-size:13px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.05em;}
-  .field-row{ display:flex; gap:8px; margin-bottom:10px; }
-  .in{
-    background: var(--bg-soft);
-    border:1px solid var(--line);
-    border-radius:12px;
-    color:var(--text);
-    font-size:16px;
-    padding: 13px 14px;
-    width:100%;
-    outline:none;
-    transition: border-color .15s;
-  }
-  .in:focus{ border-color: var(--accent-dim); }
-  .in::placeholder{ color: #64748b; }
-  #kcal{ width: 120px; flex-shrink:0; text-align:center; }
-
   .meals{ display:flex; gap:6px; margin-bottom:12px; }
   .meal-pill{
     flex:1; padding:9px 4px; border-radius:10px; border:1px solid var(--line);
     background:var(--bg-soft); color:var(--muted); font-size:12px; font-weight:600;
     cursor:pointer; text-align:center; transition: all .15s;
   }
-  .meal-pill.active{
-    background: var(--accent); color:var(--accent-ink); border-color:var(--accent);
+  .meal-pill.active{ background: var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+
+  .in{
+    background: var(--bg-soft); border:1px solid var(--line); border-radius:12px; color:var(--text);
+    font-size:16px; padding: 13px 14px; width:100%; outline:none; transition: border-color .15s;
   }
+  .in:focus{ border-color: var(--accent-dim); }
+  .in::placeholder{ color: #64748b; }
+
+  /* AI row */
+  .ai-row{ display:flex; gap:8px; }
+  .ai-row .in{ flex:1; }
+  .icon-btn{
+    flex-shrink:0; width:50px; border:1px solid var(--line); border-radius:12px;
+    background:var(--bg-soft); color:var(--blue); font-size:22px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition: background .15s;
+  }
+  .icon-btn:active{ background:var(--card-hi); }
   .addbtn{
-    width:100%; padding:14px; border:none; border-radius:12px;
+    width:100%; margin-top:10px; padding:14px; border:none; border-radius:12px;
     background: linear-gradient(140deg, var(--accent), #22c55e);
     color:var(--accent-ink); font-size:16px; font-weight:800; cursor:pointer;
-    box-shadow: 0 6px 16px rgba(74,222,128,0.3);
-    transition: transform .1s, filter .15s;
+    box-shadow: 0 6px 16px rgba(74,222,128,0.3); transition: transform .1s, filter .15s;
+    display:flex; align-items:center; justify-content:center; gap:8px;
   }
   .addbtn:active{ transform: scale(0.98); }
-  .addbtn:disabled{ filter:grayscale(.6) brightness(.7); box-shadow:none; cursor:default;}
+  .hint{ font-size:11.5px; color:#64748b; margin-top:9px; line-height:1.45; }
+  .link-btn{ background:none; border:none; color:var(--blue); font-size:12.5px; cursor:pointer; padding:0; font-weight:600; text-decoration:underline; text-underline-offset:2px; }
 
-  /* Recent chips */
+  .manual-row{ display:flex; gap:8px; margin-top:11px; }
+  .manual-row #kcalM{ width: 110px; flex-shrink:0; text-align:center; }
+  .manual-row .addm{
+    flex-shrink:0; width:50px; border:none; border-radius:12px; background:var(--accent-dim); color:#fff;
+    font-size:22px; font-weight:700; cursor:pointer;
+  }
+
   .recent{ margin: 0 0 22px; }
   .recent .rlabel{ font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600;}
   .chips{ display:flex; flex-wrap:wrap; gap:7px; }
   .chip{
-    background:var(--card); border:1px solid var(--line); color:var(--text);
-    font-size:13px; padding:8px 12px; border-radius:20px; cursor:pointer;
-    display:flex; align-items:center; gap:6px; transition: background .15s;
+    background:var(--card); border:1px solid var(--line); color:var(--text); font-size:13px;
+    padding:8px 12px; border-radius:20px; cursor:pointer; display:flex; align-items:center; gap:6px; transition: background .15s;
   }
   .chip:active{ background:var(--card-hi);}
   .chip .ck{ color:var(--muted); font-size:12px; }
 
-  /* Entries grouped by meal */
   .group{ margin-bottom: 20px; }
-  .group-head{
-    display:flex; align-items:center; justify-content:space-between;
-    margin: 0 4px 8px;
-  }
+  .group-head{ display:flex; align-items:center; justify-content:space-between; margin: 0 4px 8px; }
   .group-head .gname{ font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px;}
   .group-head .gname .emoji{ font-size:16px;}
   .group-head .gkcal{ font-size:13px; color:var(--muted); font-weight:600;}
   .entry{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:13px;
-    padding: 13px 14px;
-    display:flex; align-items:center; gap:12px;
-    margin-bottom:8px;
-    animation: pop .25s ease;
+    background:var(--card); border:1px solid var(--line); border-radius:13px; padding: 13px 14px;
+    display:flex; align-items:center; gap:12px; margin-bottom:8px; animation: pop .25s ease;
   }
   @keyframes pop{ from{opacity:0; transform: translateY(6px);} to{opacity:1;transform:none;} }
   .entry .ename{ flex:1; font-size:15px; font-weight:500; word-break:break-word;}
-  .entry .ekcal{ font-size:14px; font-weight:700; color:var(--muted); white-space:nowrap;}
+  .entry .ekcal{ font-size:14px; font-weight:700; color:var(--muted); white-space:nowrap; cursor:pointer; border-bottom:1px dashed rgba(147,161,189,.4); }
   .entry .del{
-    background:none; border:none; color:#64748b; cursor:pointer;
-    font-size:20px; line-height:1; padding:2px 4px; border-radius:8px;
-    transition: color .15s, background .15s;
+    background:none; border:none; color:#64748b; cursor:pointer; font-size:20px; line-height:1;
+    padding:2px 4px; border-radius:8px; transition: color .15s, background .15s;
   }
   .entry .del:active{ color:var(--over); background: rgba(248,113,113,0.12);}
 
-  .empty{
-    text-align:center; color:var(--muted); padding: 40px 20px; font-size:14px;
-  }
+  .empty{ text-align:center; color:var(--muted); padding: 40px 20px; font-size:14px; }
   .empty .big{ font-size:40px; margin-bottom:12px;}
 
-  /* Dialog */
   dialog{
     border:none; border-radius: var(--radius); background:var(--card); color:var(--text);
-    padding:22px; max-width:340px; width:calc(100% - 40px); box-shadow: var(--shadow);
+    padding:22px; max-width:360px; width:calc(100% - 36px); box-shadow: var(--shadow);
   }
-  dialog::backdrop{ background: rgba(6,10,20,0.6); backdrop-filter: blur(3px);}
-  dialog h4{ margin:0 0 6px; font-size:17px;}
+  dialog::backdrop{ background: rgba(6,10,20,0.65); backdrop-filter: blur(3px);}
+  dialog h4{ margin:0 0 6px; font-size:17px; display:flex; align-items:center; gap:8px;}
   dialog p{ margin:0 0 16px; color:var(--muted); font-size:13px; line-height:1.5;}
   .dlg-actions{ display:flex; gap:8px; margin-top:16px;}
   .dlg-actions button{ flex:1; padding:12px; border-radius:11px; font-size:14px; font-weight:700; cursor:pointer; border:none;}
   .btn-ok{ background:var(--accent); color:var(--accent-ink);}
   .btn-cancel{ background:var(--bg-soft); color:var(--text); border:1px solid var(--line);}
+
+  /* Barcode dialog */
+  .cam-wrap{ position:relative; border-radius:12px; overflow:hidden; background:#000; aspect-ratio: 4/3; margin-bottom:12px; display:none; }
+  .cam-wrap.on{ display:block; }
+  .cam-wrap video{ width:100%; height:100%; object-fit:cover; }
+  .cam-wrap .reticle{ position:absolute; inset:18% 12%; border:2px solid rgba(74,222,128,.9); border-radius:10px; box-shadow:0 0 0 100vmax rgba(0,0,0,.25); }
+  .cam-note{ font-size:12.5px; color:var(--warn); background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.25); padding:10px 12px; border-radius:10px; margin-bottom:12px; line-height:1.5; display:none;}
+  .cam-note.on{ display:block;}
+  .code-row{ display:flex; gap:8px; margin-bottom:6px;}
+  .code-row .in{ flex:1;}
+  .code-row .go{ flex-shrink:0; width:64px; border:none; border-radius:12px; background:var(--blue); color:#06182e; font-weight:700; cursor:pointer; font-size:14px;}
+  .prod-card{ display:none; margin-top:14px; padding:14px; border-radius:12px; background:var(--bg-soft); border:1px solid var(--line);}
+  .prod-card.on{ display:block;}
+  .prod-card .pk{ display:flex; gap:8px; margin-top:10px; align-items:center;}
+  .prod-card .pk .in{ width:110px; text-align:center;}
+  .status{ font-size:12.5px; color:var(--muted); margin:8px 0 0; min-height:16px; line-height:1.5;}
+
+  /* Toast */
+  .toast{
+    position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px);
+    background:var(--card-hi); color:var(--text); border:1px solid var(--line);
+    padding:12px 16px; border-radius:14px; font-size:13.5px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:14px; opacity:0; pointer-events:none;
+    transition: opacity .2s, transform .2s; z-index:50; max-width: calc(100% - 32px);
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto;}
+  .toast button{ background:none;border:none;color:var(--accent); font-weight:700; font-size:13.5px; cursor:pointer; white-space:nowrap;}
 
   .footnote{ text-align:center; color:#54607a; font-size:11px; margin-top:30px; line-height:1.5;}
 </style>
@@ -224,7 +208,6 @@
     <button class="navbtn" id="nextDay" aria-label="Nächster Tag">›</button>
   </div>
 
-  <!-- Summary -->
   <div class="summary">
     <div class="ring">
       <svg width="104" height="104" viewBox="0 0 104 104">
@@ -232,27 +215,15 @@
         <circle id="ringFill" cx="52" cy="52" r="46" fill="none" stroke="var(--accent)" stroke-width="9"
                 stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289"/>
       </svg>
-      <div class="center">
-        <div class="kcal"><span id="totalKcal">0</span><small> kcal</small></div>
-      </div>
+      <div class="center"><div class="kcal"><span id="totalKcal">0</span><small> kcal</small></div></div>
     </div>
     <div class="sm-meta">
-      <div class="sm-row">
-        <span class="lbl">Tagesziel</span>
-        <span class="val"><span id="goalVal">2000</span> <button class="goal-edit" id="editGoal">ändern</button></span>
-      </div>
-      <div class="sm-row">
-        <span class="lbl">Verbleibend</span>
-        <span class="val" id="remainVal">2000 kcal</span>
-      </div>
-      <div class="sm-row">
-        <span class="lbl">Einträge</span>
-        <span class="val" id="countVal">0</span>
-      </div>
+      <div class="sm-row"><span class="lbl">Tagesziel</span><span class="val"><span id="goalVal">2000</span> <button class="goal-edit" id="editGoal">ändern</button></span></div>
+      <div class="sm-row"><span class="lbl">Verbleibend</span><span class="val" id="remainVal">2000 kcal</span></div>
+      <div class="sm-row"><span class="lbl">Einträge</span><span class="val" id="countVal">0</span></div>
     </div>
   </div>
 
-  <!-- Quick add -->
   <div class="quick">
     <h3>Schnell hinzufügen</h3>
     <div class="meals" id="mealSelect">
@@ -261,30 +232,45 @@
       <div class="meal-pill" data-meal="Abend">🌙 Abend</div>
       <div class="meal-pill" data-meal="Snack">🍎 Snack</div>
     </div>
-    <div class="field-row">
-      <input class="in" id="foodName" type="text" placeholder="Was hast du gegessen?" autocomplete="off" enterkeyhint="done">
-      <input class="in" id="kcal" type="number" inputmode="numeric" placeholder="kcal" min="0" step="1">
+
+    <div class="ai-row">
+      <input class="in" id="aiInput" type="text" placeholder="z. B. eine kleine Portion Nudeln" autocomplete="off" enterkeyhint="done">
+      <button class="icon-btn" id="scanBtn" aria-label="Barcode scannen" title="Barcode scannen">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6v12M6 6v12M9 6v12M13 6v12M16 6v12M20 6v12"/></svg>
+      </button>
     </div>
-    <button class="addbtn" id="addBtn">+ Eintragen</button>
+    <button class="addbtn" id="aiAdd">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#06231a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l1.5 3L10 7.5 6.5 9 5 12 3.5 9 0 7.5 3.5 6z" transform="translate(4 3)"/><path d="M18 13l.9 1.8L21 15.6l-2.1.8L18 18l-.9-1.6-2.1-.8 2.1-.8z"/></svg>
+      Schätzen &amp; eintragen
+    </button>
+    <div class="hint">
+      Tippe frei, was du gegessen hast – Mengen wie „2 Eier", „großes Glas Cola" oder „150 g Reis" werden verstanden.
+      <button class="link-btn" id="toggleManual">Kalorien selbst eingeben</button>
+    </div>
+
+    <div class="manual-row" id="manualRow" style="display:none;">
+      <input class="in" id="nameM" type="text" placeholder="Name" autocomplete="off">
+      <input class="in" id="kcalM" type="number" inputmode="numeric" placeholder="kcal" min="0" step="1">
+      <button class="addm" id="addM" aria-label="Hinzufügen">+</button>
+    </div>
   </div>
 
-  <!-- Recent -->
   <div class="recent" id="recentWrap" style="display:none;">
     <div class="rlabel">Zuletzt gegessen · tippen zum schnellen Hinzufügen</div>
     <div class="chips" id="recentChips"></div>
   </div>
 
-  <!-- Entries -->
   <div id="entries"></div>
 
-  <div class="footnote">
-    Alles bleibt nur auf deinem Gerät gespeichert.<br>Keine Anmeldung, keine Cloud.
-  </div>
+  <div class="footnote">Alles bleibt nur auf deinem Gerät gespeichert.<br>Keine Anmeldung, keine Cloud.</div>
 </div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><span id="toastMsg"></span><button id="toastAction" style="display:none;"></button></div>
 
 <!-- Goal dialog -->
 <dialog id="goalDialog">
-  <h4>Tagesziel festlegen</h4>
+  <h4>🎯 Tagesziel festlegen</h4>
   <p>Wie viele Kalorien möchtest du pro Tag maximal zu dir nehmen?</p>
   <input class="in" id="goalInput" type="number" inputmode="numeric" min="0" step="50" placeholder="z. B. 2000">
   <div class="dlg-actions">
@@ -293,208 +279,467 @@
   </div>
 </dialog>
 
+<!-- Barcode dialog -->
+<dialog id="scanDialog">
+  <h4>📷 Barcode scannen</h4>
+  <p>Richte die Kamera auf den Strichcode – oder gib die Nummer unter dem Code manuell ein.</p>
+  <div class="cam-note" id="camNote"></div>
+  <div class="cam-wrap" id="camWrap"><video id="video" playsinline muted></video><div class="reticle"></div></div>
+  <div class="code-row">
+    <input class="in" id="codeInput" type="text" inputmode="numeric" placeholder="Barcode-Nummer" autocomplete="off">
+    <button class="go" id="codeGo">Suchen</button>
+  </div>
+  <div class="status" id="scanStatus"></div>
+  <div class="prod-card" id="prodCard">
+    <input class="in" id="prodName" type="text" placeholder="Produktname">
+    <div class="pk">
+      <input class="in" id="prodKcal" type="number" inputmode="numeric" min="0" step="1" placeholder="kcal">
+      <span style="font-size:12.5px;color:var(--muted);" id="prodBasis"></span>
+    </div>
+  </div>
+  <div class="dlg-actions">
+    <button class="btn-cancel" id="scanClose">Schließen</button>
+    <button class="btn-ok" id="prodAdd" style="display:none;">Eintragen</button>
+  </div>
+</dialog>
+
 <script>
 (function(){
   "use strict";
-  const STORE_KEY = "snack.entries.v1";
-  const GOAL_KEY  = "snack.goal.v1";
-  const MEAL_KEY  = "snack.lastmeal.v1";
+  const STORE_KEY="snack.entries.v1", GOAL_KEY="snack.goal.v1", MEAL_KEY="snack.lastmeal.v1";
+  const MEAL_EMOJI={ "Frühstück":"🍳","Mittag":"🍲","Abend":"🌙","Snack":"🍎" };
+  const MEAL_ORDER=["Frühstück","Mittag","Abend","Snack"];
+  const RING_CIRC=2*Math.PI*46;
 
-  const MEAL_EMOJI = { "Frühstück":"🍳", "Mittag":"🍲", "Abend":"🌙", "Snack":"🍎" };
-  const MEAL_ORDER = ["Frühstück","Mittag","Abend","Snack"];
-  const RING_CIRC = 2 * Math.PI * 46; // 289.02
+  // ============ Lebensmittel-Datenbank (kcal je 100 g/ml gekocht, typ. Portion in g) ============
+  // per: Gramm je Maßeinheit für dieses Lebensmittel (überschreibt Standard)
+  const DB=[
+    {n:"Nudeln",k:150,p:200,s:["nudeln","pasta","spaghetti","spagetti","penne","makkaroni","fusilli","tagliatelle"],per:{teller:250}},
+    {n:"Reis",k:130,p:180,s:["reis"],per:{teller:220}},
+    {n:"Kartoffeln",k:80,p:200,s:["kartoffeln","kartoffel","salzkartoffeln","pellkartoffeln"]},
+    {n:"Pommes",k:290,p:150,s:["pommes","fritten"]},
+    {n:"Brot",k:250,p:45,s:["brot","vollkornbrot","graubrot","schwarzbrot","mischbrot"],per:{scheibe:45,stück:45}},
+    {n:"Toast",k:280,p:30,s:["toast","toastbrot"],per:{scheibe:30,stück:30}},
+    {n:"Brötchen",k:270,p:55,s:["brötchen","semmel","schrippe","weckle"],per:{stück:55}},
+    {n:"Croissant",k:400,p:60,s:["croissant","gipfeli"],per:{stück:60}},
+    {n:"Müsli",k:360,p:60,s:["müsli","muesli"],per:{schüssel:60,teller:60}},
+    {n:"Haferflocken",k:370,p:50,s:["haferflocken","oats"]},
+    {n:"Porridge",k:90,p:250,s:["porridge","haferbrei"],per:{teller:250,schüssel:250}},
+    {n:"Cornflakes",k:380,p:40,s:["cornflakes"]},
+    {n:"Ei",k:130,p:60,s:["ei","eier","spiegelei","frühstücksei"],per:{stück:60}},
+    {n:"Rührei",k:150,p:120,s:["rührei","rühreier"]},
+    {n:"Omelett",k:155,p:150,s:["omelett","omelette"]},
+    {n:"Hähnchen",k:165,p:150,s:["hähnchenbrust","hühnerbrust","hähnchen","hühnchen","hendl","poulet","chicken"]},
+    {n:"Steak",k:250,p:150,s:["steak","rindfleisch","rinderfilet","rind"]},
+    {n:"Schnitzel",k:290,p:150,s:["schnitzel"],per:{stück:150}},
+    {n:"Schweinefleisch",k:280,p:150,s:["schweinefleisch","schwein","kotelett","kassler"]},
+    {n:"Hackfleisch",k:240,p:125,s:["hackfleisch","gehacktes","hack","mett"]},
+    {n:"Frikadelle",k:270,p:90,s:["frikadelle","bulette","fleischküchle"],per:{stück:90}},
+    {n:"Lachs",k:200,p:150,s:["lachs"]},
+    {n:"Fisch",k:130,p:150,s:["fisch","seelachs","kabeljau","dorsch","scholle","forelle"]},
+    {n:"Thunfisch",k:130,p:120,s:["thunfisch","tuna"],per:{dose:150}},
+    {n:"Wurst",k:300,p:30,s:["wurst","fleischwurst","lyoner"],per:{scheibe:15}},
+    {n:"Schinken",k:215,p:30,s:["schinken","kochschinken"],per:{scheibe:20}},
+    {n:"Salami",k:350,p:20,s:["salami"],per:{scheibe:6}},
+    {n:"Bratwurst",k:280,p:120,s:["bratwurst","rostbratwurst"],per:{stück:120}},
+    {n:"Currywurst",k:330,p:150,s:["currywurst"]},
+    {n:"Würstchen",k:280,p:50,s:["würstchen","wiener","frankfurter","bockwurst"],per:{stück:50}},
+    {n:"Käse",k:350,p:30,s:["käse","gouda","emmentaler","cheddar","bergkäse"],per:{scheibe:25}},
+    {n:"Frischkäse",k:250,p:20,s:["frischkäse"],per:{el:20}},
+    {n:"Mozzarella",k:250,p:60,s:["mozzarella"]},
+    {n:"Feta",k:260,p:50,s:["feta"]},
+    {n:"Tofu",k:120,p:150,s:["tofu"]},
+    {n:"Milch",k:47,p:200,s:["milch"],per:{glas:200,flasche:500}},
+    {n:"Joghurt",k:60,p:150,s:["joghurt","jogurt"],per:{becher:150}},
+    {n:"Quark",k:70,p:200,s:["quark","magerquark"],per:{becher:200}},
+    {n:"Skyr",k:63,p:150,s:["skyr"],per:{becher:150}},
+    {n:"Butter",k:720,p:10,s:["butter"],per:{el:15,scheibe:8,tl:5}},
+    {n:"Sahne",k:290,p:15,s:["sahne","schlagsahne"],per:{el:15}},
+    {n:"Apfel",k:52,p:180,s:["apfel","äpfel"],per:{stück:180}},
+    {n:"Banane",k:90,p:120,s:["banane","bananen"],per:{stück:120}},
+    {n:"Orange",k:47,p:150,s:["orange","orangen","apfelsine"],per:{stück:150}},
+    {n:"Birne",k:57,p:160,s:["birne","birnen"],per:{stück:160}},
+    {n:"Trauben",k:70,p:100,s:["trauben","traube","weintrauben"],per:{handvoll:30}},
+    {n:"Erdbeeren",k:32,p:150,s:["erdbeeren","erdbeere"],per:{handvoll:40}},
+    {n:"Beeren",k:45,p:100,s:["beeren","blaubeeren","heidelbeeren","himbeeren","brombeeren"],per:{handvoll:30}},
+    {n:"Mandarine",k:46,p:70,s:["mandarine","mandarinen","clementine"],per:{stück:70}},
+    {n:"Kiwi",k:58,p:75,s:["kiwi"],per:{stück:75}},
+    {n:"Melone",k:35,p:200,s:["melone","wassermelone","honigmelone"],per:{stück:200}},
+    {n:"Ananas",k:50,p:120,s:["ananas"]},
+    {n:"Salat",k:20,p:100,s:["salat","blattsalat","kopfsalat","feldsalat","gemischter salat"],per:{teller:150,schüssel:150}},
+    {n:"Tomate",k:18,p:100,s:["tomate","tomaten"],per:{stück:90}},
+    {n:"Gurke",k:15,p:100,s:["gurke","salatgurke"],per:{stück:300,scheibe:8}},
+    {n:"Karotte",k:40,p:80,s:["karotte","karotten","möhre","möhren","mohrrübe"],per:{stück:70}},
+    {n:"Brokkoli",k:35,p:150,s:["brokkoli","broccoli"]},
+    {n:"Paprika",k:30,p:120,s:["paprika"],per:{stück:150}},
+    {n:"Avocado",k:160,p:100,s:["avocado"],per:{stück:150}},
+    {n:"Zwiebel",k:40,p:50,s:["zwiebel","zwiebeln"],per:{stück:70}},
+    {n:"Mais",k:90,p:100,s:["mais"],per:{dose:140}},
+    {n:"Spinat",k:23,p:150,s:["spinat"]},
+    {n:"Bohnen",k:95,p:150,s:["bohnen","kidneybohnen"],per:{dose:150}},
+    {n:"Linsen",k:115,p:150,s:["linsen"]},
+    {n:"Erbsen",k:80,p:100,s:["erbsen"]},
+    {n:"Schokolade",k:540,p:25,s:["schokolade","schoki","vollmilchschokolade","zartbitterschokolade"],per:{riegel:25,tafel:100,stück:6,reihe:20}},
+    {n:"Kekse",k:480,p:24,s:["keks","kekse","plätzchen","cookie","cookies"],per:{stück:12}},
+    {n:"Chips",k:530,p:30,s:["chips"],per:{handvoll:25,tüte:175}},
+    {n:"Gummibärchen",k:340,p:30,s:["gummibärchen","fruchtgummi","haribo"],per:{handvoll:25,tüte:200}},
+    {n:"Eis",k:200,p:100,s:["eis","eiscreme"],per:{kugel:50}},
+    {n:"Kuchen",k:370,p:100,s:["kuchen","marmorkuchen","käsekuchen"],per:{stück:100}},
+    {n:"Donut",k:280,p:60,s:["donut","doughnut"],per:{stück:60}},
+    {n:"Muffin",k:380,p:70,s:["muffin"],per:{stück:70}},
+    {n:"Müsliriegel",k:420,p:25,s:["müsliriegel","proteinriegel"],per:{riegel:25,stück:25}},
+    {n:"Nüsse",k:620,p:30,s:["nüsse","mandeln","walnüsse","cashews","cashew","haselnüsse","erdnüsse"],per:{handvoll:25}},
+    {n:"Popcorn",k:480,p:30,s:["popcorn"]},
+    {n:"Pizza",k:260,p:300,s:["pizza"],per:{stück:125}},
+    {n:"Burger",k:250,p:250,s:["burger","hamburger","cheeseburger"],per:{stück:220}},
+    {n:"Döner",k:215,p:350,s:["döner","dürüm","kebab"],per:{stück:350}},
+    {n:"Sushi",k:145,p:320,s:["sushi"],per:{stück:40}},
+    {n:"Lasagne",k:130,p:350,s:["lasagne"]},
+    {n:"Suppe",k:45,p:300,s:["suppe","gemüsesuppe","tomatensuppe"],per:{teller:300,tasse:200}},
+    {n:"Sandwich",k:250,p:200,s:["sandwich"],per:{stück:200}},
+    {n:"Wrap",k:210,p:200,s:["wrap"],per:{stück:200}},
+    {n:"Pfannkuchen",k:200,p:80,s:["pfannkuchen","pancakes","pancake","crepe"],per:{stück:80}},
+    {n:"Spätzle",k:170,p:200,s:["spätzle","spaetzle"]},
+    {n:"Wasser",k:0,p:200,s:["wasser","mineralwasser","sprudel"],per:{glas:200,flasche:500}},
+    {n:"Kaffee",k:5,p:150,s:["kaffee","espresso"],per:{tasse:150,becher:250}},
+    {n:"Cappuccino",k:55,p:150,s:["cappuccino","milchkaffee","latte"],per:{tasse:150,becher:250,glas:250}},
+    {n:"Tee",k:1,p:200,s:["tee"],per:{tasse:200,becher:250}},
+    {n:"Cola",k:42,p:200,s:["cola","softdrink"],per:{glas:200,dose:330,flasche:500}},
+    {n:"Limonade",k:40,p:200,s:["limonade","limo","fanta","sprite"],per:{glas:200,dose:330,flasche:500}},
+    {n:"Saft",k:46,p:200,s:["saft","orangensaft","apfelsaft","fruchtsaft"],per:{glas:200,flasche:500}},
+    {n:"Bier",k:43,p:330,s:["bier","pils","helles","weizen"],per:{glas:300,flasche:500,dose:500}},
+    {n:"Wein",k:82,p:150,s:["wein","rotwein","weißwein"],per:{glas:150,flasche:750}},
+    {n:"Smoothie",k:55,p:250,s:["smoothie"],per:{glas:250,flasche:250}},
+    {n:"Energydrink",k:46,p:250,s:["energydrink","red bull"],per:{dose:250}},
+    {n:"Milchshake",k:110,p:300,s:["milchshake","shake"],per:{glas:300}}
+  ];
 
-  // ---- State ----
-  let entries = load(STORE_KEY, []);
-  let goal = load(GOAL_KEY, 2000);
-  let selectedMeal = load(MEAL_KEY, mealByTime());
-  let viewDate = todayKey();
+  // Synonyme, längste zuerst (für längste Übereinstimmung)
+  const SYN=[];
+  DB.forEach(f=> f.s.forEach(syn=> SYN.push({syn, food:f})));
+  SYN.sort((a,b)=> b.syn.length - a.syn.length);
 
-  // ---- Helpers ----
-  function load(k, def){ try{ const v = localStorage.getItem(k); return v===null? def : JSON.parse(v);}catch(e){ return def; } }
-  function save(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  const GENERIC={ glas:200,gläser:200,tasse:150,tassen:150,becher:150,teller:300,dose:330,dosen:330,
+    flasche:500,flaschen:500,scheibe:25,scheiben:25,kugel:50,kugeln:50,handvoll:25,el:15,esslöffel:15,
+    tl:5,teelöffel:5,tüte:175,riegel:25,tafel:100,schüssel:200,schluck:20,
+    stück:null,stücke:null,portion:null,portionen:null };
+  const MEASURE_CANON={ gläser:"glas",tassen:"tasse",dosen:"dose",flaschen:"flasche",scheiben:"scheibe",
+    kugeln:"kugel",stücke:"stück",portionen:"portion",esslöffel:"el",teelöffel:"tl" };
+  const MEASURES=Object.keys(GENERIC).concat(Object.keys(MEASURE_CANON));
+
+  const QTY_WORDS=[["anderthalb",1.5],["eineinhalb",1.5],["zwei",2],["drei",3],["vier",4],["fünf",5],
+    ["sechs",6],["sieben",7],["acht",8],["neun",9],["zehn",10],["halbe",0.5],["halber",0.5],["halbes",0.5],
+    ["eine",1],["einen",1],["einem",1],["ein",1],["eins",1]];
+  const SIZE_WORDS=[["riesengroß",1.8],["riesig",1.8],["riesen",1.7],["große",1.4],["großer",1.4],["großes",1.4],
+    ["groß",1.4],["kleine",0.65],["kleiner",0.65],["kleines",0.65],["klein",0.65],["mini",0.5],
+    ["ordentlich",1.3],["xxl",1.8],["xl",1.5]];
+
+  function isWordChar(c){ return c!=null && /[a-zäöüß0-9]/i.test(c); }
+  function findWord(str, w){
+    let from=0, idx;
+    while((idx=str.indexOf(w, from))!==-1){
+      if(!isWordChar(str[idx-1]) && !isWordChar(str[idx+w.length])) return idx;
+      from=idx+1;
+    }
+    return -1;
+  }
+  function hasWord(str,w){ return findWord(str,w)!==-1; }
+
+  function findFoods(s){
+    const used=new Array(s.length).fill(false), found=[];
+    for(const {syn,food} of SYN){
+      if(found.some(x=>x.food===food)) continue;
+      const idx=findWord(s,syn);
+      if(idx===-1) continue;
+      let overlap=false; for(let i=idx;i<idx+syn.length;i++){ if(used[i]){overlap=true;break;} }
+      if(overlap) continue;
+      for(let i=idx;i<idx+syn.length;i++) used[i]=true;
+      found.push({food, pos:idx});
+    }
+    found.sort((a,b)=>a.pos-b.pos);
+    return found.map(x=>x.food);
+  }
+  function parseGrams(s){
+    const m=s.match(/(\d+(?:\.\d+)?)\s*(kilogramm|kg|gramm|milliliter|ml|liter|g|l)(?![a-zäöüß])/);
+    if(!m) return null;
+    let v=parseFloat(m[1]); const u=m[2];
+    if(u==="kg"||u==="kilogramm"||u==="l"||u==="liter") v*=1000;
+    return v;
+  }
+  function parseQty(s){
+    for(const [w,v] of QTY_WORDS){ if(hasWord(s,w)) return v; }
+    const m=s.match(/(?<![.\d])(\d+(?:\.\d+)?)(?![.\d])/);
+    return m? parseFloat(m[1]) : 1;
+  }
+  function parseSize(s){ for(const [w,v] of SIZE_WORDS){ if(hasWord(s,w)) return v; } return 1; }
+  function parseMeasure(s){
+    for(const w of MEASURES){ if(hasWord(s,w)) return MEASURE_CANON[w]||w; }
+    return null;
+  }
+  function fmtQty(v){ if(v===0.5) return "½"; if(v===1.5) return "1½"; return String(v); }
+
+  function estimate(text){
+    const raw=(text||"").trim(); if(!raw) return null;
+    const s=" "+raw.toLowerCase().replace(/,/g,".")+" ";
+    const foods=findFoods(s);
+    if(!foods.length) return null;
+    const gramsExpl=parseGrams(s), qty=parseQty(s), size=parseSize(s), measure=parseMeasure(s);
+    const items=foods.map((food,i)=>{
+      const useQty=i===0?qty:1, useMeasure=i===0?measure:null, useG=i===0?gramsExpl:null;
+      let grams;
+      if(useG!=null) grams=useG;
+      else{
+        let base;
+        if(useMeasure){
+          const own=food.per&&food.per[useMeasure];
+          base = own!=null ? own : (GENERIC[useMeasure]!=null?GENERIC[useMeasure]:food.p);
+        } else base=food.p;
+        grams=useQty*base*size;
+      }
+      return { name:food.n, grams:Math.round(grams), kcal:Math.round(grams/100*food.k) };
+    });
+    const kcal=items.reduce((a,b)=>a+b.kcal,0);
+    let label;
+    if(items.length===1){
+      if(gramsExpl!=null){
+        label = items[0].grams + " g " + items[0].name;   // explizite Gramm/ml-Angabe
+      } else {
+        const q= qty!==1 ? fmtQty(qty)+"× " : "";
+        const qual = size<1 ? " (klein)" : (size>1 ? " (groß)" : "");
+        label = q + items[0].name + qual;
+      }
+    } else label = items.map(x=>x.name).join(" + ");
+    return { label, kcal };
+  }
+
+  // ============ State ============
+  let entries=load(STORE_KEY,[]), goal=load(GOAL_KEY,2000), selectedMeal=load(MEAL_KEY,mealByTime());
+  let viewDate=todayKey(), lastAddedId=null, toastTimer=null;
+
+  function load(k,def){ try{ const v=localStorage.getItem(k); return v===null?def:JSON.parse(v);}catch(e){return def;} }
+  function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
   function todayKey(){ return dateKey(new Date()); }
   function dateKey(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
-  function keyToDate(k){ const [y,m,d]=k.split("-").map(Number); return new Date(y, m-1, d); }
-  function mealByTime(){
-    const h = new Date().getHours();
-    if(h < 11) return "Frühstück";
-    if(h < 15) return "Mittag";
-    if(h < 21) return "Abend";
-    return "Snack";
-  }
-  function esc(s){ return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  function keyToDate(k){ const [y,m,d]=k.split("-").map(Number); return new Date(y,m-1,d); }
+  function mealByTime(){ const h=new Date().getHours(); return h<11?"Frühstück":h<15?"Mittag":h<21?"Abend":"Snack"; }
+  function esc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+  const $=id=>document.getElementById(id);
 
-  // ---- DOM ----
-  const $ = id => document.getElementById(id);
-  const foodName = $("foodName"), kcalIn = $("kcal"), addBtn = $("addBtn");
-  const entriesEl = $("entries");
-
-  // ---- Meal pills ----
-  function renderMealPills(){
-    document.querySelectorAll(".meal-pill").forEach(p=>{
-      p.classList.toggle("active", p.dataset.meal === selectedMeal);
-    });
-  }
-  $("mealSelect").addEventListener("click", e=>{
-    const pill = e.target.closest(".meal-pill");
-    if(!pill) return;
-    selectedMeal = pill.dataset.meal;
-    save(MEAL_KEY, selectedMeal);
-    renderMealPills();
+  // ============ Meal pills ============
+  function renderMealPills(){ document.querySelectorAll(".meal-pill").forEach(p=>p.classList.toggle("active", p.dataset.meal===selectedMeal)); }
+  $("mealSelect").addEventListener("click",e=>{
+    const pill=e.target.closest(".meal-pill"); if(!pill) return;
+    selectedMeal=pill.dataset.meal; save(MEAL_KEY,selectedMeal); renderMealPills();
   });
 
-  // ---- Add entry ----
-  function addEntry(name, kcal, meal){
-    name = (name||"").trim();
-    if(!name) return false;
-    let k = parseInt(kcal, 10);
-    if(isNaN(k) || k < 0) k = 0;
-    entries.push({
-      id: Date.now() + "-" + Math.random().toString(36).slice(2,7),
-      name, kcal: k, meal: meal || selectedMeal, date: viewDate, ts: Date.now()
-    });
-    save(STORE_KEY, entries);
-    render();
-    return true;
+  // ============ Add / delete / edit ============
+  function addEntry(name,kcal,meal){
+    name=(name||"").trim(); if(!name) return null;
+    let k=parseInt(kcal,10); if(isNaN(k)||k<0) k=0;
+    const id=Date.now()+"-"+Math.random().toString(36).slice(2,7);
+    entries.push({ id, name, kcal:k, meal:meal||selectedMeal, date:viewDate, ts:Date.now() });
+    save(STORE_KEY,entries); lastAddedId=id; render(); return id;
   }
+  function removeEntry(id){ entries=entries.filter(x=>x.id!==id); save(STORE_KEY,entries); render(); }
 
-  addBtn.addEventListener("click", ()=>{
-    if(addEntry(foodName.value, kcalIn.value, selectedMeal)){
-      foodName.value = ""; kcalIn.value = "";
-      foodName.focus();
-    } else {
-      foodName.focus();
+  const entriesEl=$("entries");
+  entriesEl.addEventListener("click",e=>{
+    const del=e.target.closest(".del");
+    if(del){ removeEntry(del.dataset.id); return; }
+    const kc=e.target.closest(".ekcal");
+    if(kc){
+      const ent=entries.find(x=>x.id===kc.dataset.id); if(!ent) return;
+      const v=prompt("Kalorien für „"+ent.name+"“:", ent.kcal);
+      if(v!==null){ let n=parseInt(v,10); ent.kcal=isNaN(n)||n<0?0:n; save(STORE_KEY,entries); render(); }
     }
   });
-  foodName.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); kcalIn.focus(); }});
-  kcalIn.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); addBtn.click(); }});
 
-  // ---- Delete ----
-  entriesEl.addEventListener("click", e=>{
-    const btn = e.target.closest(".del");
-    if(!btn) return;
-    const id = btn.dataset.id;
-    entries = entries.filter(x=>x.id !== id);
-    save(STORE_KEY, entries);
-    render();
-  });
+  // ============ Toast ============
+  function toast(msg, actionLabel, actionFn){
+    const t=$("toast"), a=$("toastAction");
+    $("toastMsg").textContent=msg;
+    if(actionLabel){ a.style.display="inline"; a.textContent=actionLabel; a.onclick=()=>{ hideToast(); actionFn&&actionFn(); }; }
+    else a.style.display="none";
+    t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(hideToast,4000);
+  }
+  function hideToast(){ $("toast").classList.remove("show"); }
 
-  // ---- Recent chips: unique names from history, most frequent/recent first ----
+  // ============ AI input ============
+  const aiInput=$("aiInput");
+  function doEstimate(){
+    const text=aiInput.value.trim();
+    if(!text){ aiInput.focus(); return; }
+    const est=estimate(text);
+    if(est){
+      addEntry(est.label, est.kcal, selectedMeal);
+      aiInput.value="";
+      const id=lastAddedId;
+      toast("≈ "+est.kcal.toLocaleString("de-DE")+" kcal · "+est.label, "Rückgängig", ()=>removeEntry(id));
+      if(window.matchMedia("(pointer:fine)").matches) aiInput.focus();
+    } else {
+      // nicht erkannt -> manuelle Eingabe vorbefüllen
+      showManual(true); $("nameM").value=text; $("kcalM").value=""; $("kcalM").focus();
+      toast("Nicht erkannt – bitte Kalorien eintragen.");
+    }
+  }
+  $("aiAdd").addEventListener("click",doEstimate);
+  aiInput.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); doEstimate(); } });
+
+  // ============ Manual ============
+  function showManual(on){ $("manualRow").style.display=on?"flex":"none"; }
+  $("toggleManual").addEventListener("click",()=>{ const r=$("manualRow"); showManual(r.style.display==="none"); if(r.style.display!=="none") $("nameM").focus(); });
+  function manualAdd(){
+    const name=$("nameM").value.trim(); if(!name){ $("nameM").focus(); return; }
+    addEntry(name,$("kcalM").value,selectedMeal);
+    $("nameM").value=""; $("kcalM").value=""; $("nameM").focus();
+  }
+  $("addM").addEventListener("click",manualAdd);
+  $("nameM").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("kcalM").focus(); }});
+  $("kcalM").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); manualAdd(); }});
+
+  // ============ Recent chips ============
   function renderRecent(){
-    const wrap = $("recentWrap"), chips = $("recentChips");
-    const seen = new Map();
-    // walk newest -> oldest
-    [...entries].sort((a,b)=>b.ts-a.ts).forEach(e=>{
-      const key = e.name.toLowerCase();
-      if(!seen.has(key)) seen.set(key, {name:e.name, kcal:e.kcal});
-    });
-    const todaysNames = new Set(entries.filter(e=>e.date===viewDate).map(e=>e.name.toLowerCase()));
-    const list = [...seen.values()].filter(x=>!todaysNames.has(x.name.toLowerCase())).slice(0,8);
-    if(list.length === 0){ wrap.style.display="none"; return; }
+    const wrap=$("recentWrap"), chips=$("recentChips"), seen=new Map();
+    [...entries].sort((a,b)=>b.ts-a.ts).forEach(e=>{ const k=e.name.toLowerCase(); if(!seen.has(k)) seen.set(k,{name:e.name,kcal:e.kcal}); });
+    const today=new Set(entries.filter(e=>e.date===viewDate).map(e=>e.name.toLowerCase()));
+    const list=[...seen.values()].filter(x=>!today.has(x.name.toLowerCase())).slice(0,8);
+    if(!list.length){ wrap.style.display="none"; return; }
     wrap.style.display="block";
-    chips.innerHTML = list.map(x=>
-      `<button class="chip" data-name="${esc(x.name)}" data-kcal="${x.kcal}">${esc(x.name)}${x.kcal?` <span class="ck">${x.kcal}</span>`:""}</button>`
-    ).join("");
+    chips.innerHTML=list.map(x=>`<button class="chip" data-name="${esc(x.name)}" data-kcal="${x.kcal}">${esc(x.name)}${x.kcal?` <span class="ck">${x.kcal}</span>`:""}</button>`).join("");
   }
-  $("recentChips").addEventListener("click", e=>{
-    const chip = e.target.closest(".chip");
-    if(!chip) return;
-    addEntry(chip.dataset.name, chip.dataset.kcal, selectedMeal);
-  });
+  $("recentChips").addEventListener("click",e=>{ const c=e.target.closest(".chip"); if(!c) return; addEntry(c.dataset.name,c.dataset.kcal,selectedMeal); });
 
-  // ---- Date nav ----
-  $("prevDay").addEventListener("click", ()=>shiftDay(-1));
-  $("nextDay").addEventListener("click", ()=>shiftDay(1));
-  function shiftDay(delta){
-    const d = keyToDate(viewDate); d.setDate(d.getDate()+delta);
-    viewDate = dateKey(d); render();
-  }
+  // ============ Date nav ============
+  $("prevDay").addEventListener("click",()=>shiftDay(-1));
+  $("nextDay").addEventListener("click",()=>shiftDay(1));
+  function shiftDay(d){ const dt=keyToDate(viewDate); dt.setDate(dt.getDate()+d); viewDate=dateKey(dt); render(); }
   function renderDateLabel(){
-    const label = $("dateLabel"), sub = $("dateSub"), next = $("nextDay");
-    const d = keyToDate(viewDate);
-    const t = todayKey();
-    const yst = (()=>{ const x=new Date(); x.setDate(x.getDate()-1); return dateKey(x); })();
-    let main;
-    if(viewDate===t) main = "Heute";
-    else if(viewDate===yst) main = "Gestern";
-    else main = d.toLocaleDateString("de-DE", {weekday:"long"});
-    label.childNodes[0].nodeValue = main;
-    sub.textContent = d.toLocaleDateString("de-DE", {day:"2-digit", month:"long", year:"numeric"});
-    next.disabled = (viewDate >= t);
+    const d=keyToDate(viewDate), t=todayKey();
+    const yst=(()=>{ const x=new Date(); x.setDate(x.getDate()-1); return dateKey(x); })();
+    let main = viewDate===t?"Heute":(viewDate===yst?"Gestern":d.toLocaleDateString("de-DE",{weekday:"long"}));
+    $("dateLabel").childNodes[0].nodeValue=main;
+    $("dateSub").textContent=d.toLocaleDateString("de-DE",{day:"2-digit",month:"long",year:"numeric"});
+    $("nextDay").disabled=(viewDate>=t);
   }
 
-  // ---- Goal dialog ----
-  const goalDialog = $("goalDialog"), goalInput = $("goalInput");
-  $("editGoal").addEventListener("click", ()=>{
-    goalInput.value = goal;
-    if(typeof goalDialog.showModal === "function") goalDialog.showModal();
-    else { const v = prompt("Tagesziel (kcal):", goal); if(v!==null){ goal=Math.max(0,parseInt(v,10)||0); save(GOAL_KEY,goal); render(); } }
-    setTimeout(()=>goalInput.select(), 50);
+  // ============ Goal dialog ============
+  const goalDialog=$("goalDialog"), goalInput=$("goalInput");
+  $("editGoal").addEventListener("click",()=>{
+    goalInput.value=goal;
+    if(typeof goalDialog.showModal==="function"){ goalDialog.showModal(); setTimeout(()=>goalInput.select(),50); }
+    else { const v=prompt("Tagesziel (kcal):",goal); if(v!==null){ goal=Math.max(0,parseInt(v,10)||0); save(GOAL_KEY,goal); render(); } }
   });
-  $("goalCancel").addEventListener("click", ()=>goalDialog.close());
-  $("goalSave").addEventListener("click", ()=>{
-    const v = parseInt(goalInput.value,10);
-    goal = (isNaN(v)||v<0)? 0 : v;
-    save(GOAL_KEY, goal);
-    goalDialog.close();
-    render();
-  });
-  goalDialog.addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); $("goalSave").click(); }});
+  $("goalCancel").addEventListener("click",()=>goalDialog.close());
+  $("goalSave").addEventListener("click",()=>{ const v=parseInt(goalInput.value,10); goal=(isNaN(v)||v<0)?0:v; save(GOAL_KEY,goal); goalDialog.close(); render(); });
+  goalDialog.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("goalSave").click(); }});
 
-  // ---- Render entries + summary ----
-  function render(){
-    renderDateLabel();
-    renderMealPills();
+  // ============ Barcode scanner ============
+  const scanDialog=$("scanDialog"), video=$("video");
+  let stream=null, scanTimer=null, detector=null;
 
-    const dayEntries = entries.filter(e=>e.date===viewDate);
-    const total = dayEntries.reduce((s,e)=>s+e.kcal, 0);
+  $("scanBtn").addEventListener("click",openScan);
+  $("scanClose").addEventListener("click",()=>scanDialog.close());
+  scanDialog.addEventListener("close",stopCamera);
+  $("codeGo").addEventListener("click",()=>{ const c=$("codeInput").value.trim(); if(c) lookupBarcode(c); });
+  $("codeInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); $("codeGo").click(); }});
 
-    // summary
-    $("totalKcal").textContent = total.toLocaleString("de-DE");
-    $("goalVal").textContent = goal.toLocaleString("de-DE");
-    $("countVal").textContent = dayEntries.length;
-    const remain = goal - total;
-    const remainEl = $("remainVal");
-    if(remain >= 0){ remainEl.textContent = remain.toLocaleString("de-DE")+" kcal"; remainEl.style.color = "var(--text)"; }
-    else { remainEl.textContent = Math.abs(remain).toLocaleString("de-DE")+" kcal drüber"; remainEl.style.color = "var(--over)"; }
+  function setStatus(msg){ $("scanStatus").textContent=msg||""; }
+  function showProdCard(on){ $("prodCard").classList.toggle("on",on); $("prodAdd").style.display=on?"block":"none"; }
 
-    // ring
-    const pct = goal>0 ? Math.min(total/goal, 1) : 0;
-    const fill = $("ringFill");
-    fill.style.strokeDashoffset = (RING_CIRC * (1-pct)).toFixed(1);
-    fill.style.transition = "stroke-dashoffset .5s ease, stroke .3s";
-    fill.style.stroke = total>goal && goal>0 ? "var(--over)" : (pct>0.85 ? "var(--warn)" : "var(--accent)");
-
-    // grouped entries
-    if(dayEntries.length === 0){
-      entriesEl.innerHTML = `<div class="empty"><div class="big">🍽️</div>Noch nichts getrackt.<br>Trag dein erstes Essen oben ein.</div>`;
-    } else {
-      let html = "";
-      MEAL_ORDER.forEach(meal=>{
-        const list = dayEntries.filter(e=>e.meal===meal).sort((a,b)=>a.ts-b.ts);
-        if(list.length===0) return;
-        const gk = list.reduce((s,e)=>s+e.kcal,0);
-        html += `<div class="group"><div class="group-head">
-            <span class="gname"><span class="emoji">${MEAL_EMOJI[meal]||"🍴"}</span>${meal}</span>
-            <span class="gkcal">${gk.toLocaleString("de-DE")} kcal</span></div>`;
-        list.forEach(e=>{
-          html += `<div class="entry">
-            <span class="ename">${esc(e.name)}</span>
-            <span class="ekcal">${e.kcal?e.kcal.toLocaleString("de-DE")+" kcal":"–"}</span>
-            <button class="del" data-id="${e.id}" aria-label="Löschen">×</button></div>`;
-        });
-        html += `</div>`;
-      });
-      entriesEl.innerHTML = html;
+  function openScan(){
+    $("codeInput").value=""; setStatus(""); showProdCard(false);
+    $("camNote").classList.remove("on"); $("camWrap").classList.remove("on");
+    if(typeof scanDialog.showModal==="function") scanDialog.showModal();
+    startCamera();
+  }
+  async function startCamera(){
+    const canCam = window.isSecureContext && navigator.mediaDevices && navigator.mediaDevices.getUserMedia && ("BarcodeDetector" in window);
+    if(!canCam){
+      $("camNote").textContent = ("BarcodeDetector" in window)
+        ? "Live-Kamera braucht eine sichere Verbindung (https). Gib die Barcode-Nummer einfach manuell ein – funktioniert genauso."
+        : "Dieser Browser hat keinen eingebauten Barcode-Scanner (am besten Chrome auf Android). Gib die Nummer unter dem Strichcode manuell ein.";
+      $("camNote").classList.add("on"); setTimeout(()=>$("codeInput").focus(),100); return;
     }
+    try{
+      detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128"]});
+      stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}}});
+      video.srcObject=stream; await video.play(); $("camWrap").classList.add("on"); setStatus("Suche Barcode …");
+      scanTimer=setInterval(async()=>{
+        try{ const codes=await detector.detect(video); if(codes&&codes.length){ const c=codes[0].rawValue; stopCamera(); $("codeInput").value=c; lookupBarcode(c); } }catch(e){}
+      },400);
+    }catch(e){
+      $("camNote").textContent="Kein Kamerazugriff. Gib die Barcode-Nummer manuell ein.";
+      $("camNote").classList.add("on"); setTimeout(()=>$("codeInput").focus(),100);
+    }
+  }
+  function stopCamera(){ if(scanTimer){ clearInterval(scanTimer); scanTimer=null; } if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; } $("camWrap").classList.remove("on"); }
 
+  function parseServingGrams(str){ if(!str) return null; const m=String(str).match(/(\d+(?:[.,]\d+)?)\s*(g|ml)/i); return m?parseFloat(m[1].replace(",",".")):null; }
+
+  function lookupBarcode(code){
+    stopCamera(); showProdCard(false); setStatus("Suche Produkt …");
+    const url="https://world.openfoodfacts.org/api/v2/product/"+encodeURIComponent(code)+".json?fields=product_name,brands,nutriments,serving_size";
+    fetch(url).then(r=>r.json()).then(data=>{
+      if(!data||data.status!==1||!data.product){ setStatus("Produkt nicht gefunden. Du kannst es unten manuell eintragen."); showManualProd(code); return; }
+      const p=data.product, n=p.nutriments||{};
+      let name=(p.product_name||"Produkt").trim(); if(p.brands) name+=" ("+p.brands.split(",")[0].trim()+")";
+      let kcal=null, basis="";
+      if(n["energy-kcal_serving"]!=null){ kcal=Math.round(n["energy-kcal_serving"]); basis="pro Portion"+(p.serving_size?" ("+p.serving_size+")":""); }
+      else if(n["energy-kcal_100g"]!=null){
+        const sg=parseServingGrams(p.serving_size);
+        if(sg){ kcal=Math.round(n["energy-kcal_100g"]*sg/100); basis="pro Portion ("+sg+" g)"; }
+        else { kcal=Math.round(n["energy-kcal_100g"]); basis="pro 100 g – bitte anpassen"; }
+      }
+      if(kcal==null){ setStatus("Für dieses Produkt sind keine Kalorien hinterlegt. Bitte manuell eintragen."); showManualProd(code, name); return; }
+      setStatus("Gefunden ✓ – prüfen und eintragen:");
+      fillProd(name, kcal, basis);
+    }).catch(()=>{ setStatus("Keine Verbindung zur Produktdatenbank. Bitte manuell eintragen."); showManualProd(code); });
+  }
+  function fillProd(name,kcal,basis){ $("prodName").value=name; $("prodKcal").value=kcal; $("prodBasis").textContent=basis||""; showProdCard(true); }
+  function showManualProd(code,name){ fillProd(name||("Produkt "+code), "", ""); }
+  $("prodAdd").addEventListener("click",()=>{
+    const name=$("prodName").value.trim()||"Produkt"; const kcal=parseInt($("prodKcal").value,10);
+    addEntry(name, isNaN(kcal)?0:kcal, selectedMeal);
+    scanDialog.close();
+    toast(name+" hinzugefügt");
+  });
+
+  // ============ Render ============
+  function render(){
+    renderDateLabel(); renderMealPills();
+    const day=entries.filter(e=>e.date===viewDate);
+    const total=day.reduce((s,e)=>s+e.kcal,0);
+    $("totalKcal").textContent=total.toLocaleString("de-DE");
+    $("goalVal").textContent=goal.toLocaleString("de-DE");
+    $("countVal").textContent=day.length;
+    const remain=goal-total, rEl=$("remainVal");
+    if(remain>=0){ rEl.textContent=remain.toLocaleString("de-DE")+" kcal"; rEl.style.color="var(--text)"; }
+    else { rEl.textContent=Math.abs(remain).toLocaleString("de-DE")+" kcal drüber"; rEl.style.color="var(--over)"; }
+    const pct=goal>0?Math.min(total/goal,1):0, fill=$("ringFill");
+    fill.style.strokeDashoffset=(RING_CIRC*(1-pct)).toFixed(1);
+    fill.style.transition="stroke-dashoffset .5s ease, stroke .3s";
+    fill.style.stroke = (total>goal&&goal>0)?"var(--over)":(pct>0.85?"var(--warn)":"var(--accent)");
+
+    if(!day.length){
+      entriesEl.innerHTML=`<div class="empty"><div class="big">🍽️</div>Noch nichts getrackt.<br>Tipp oben einfach ein, was du gegessen hast.</div>`;
+    } else {
+      let html="";
+      MEAL_ORDER.forEach(meal=>{
+        const list=day.filter(e=>e.meal===meal).sort((a,b)=>a.ts-b.ts); if(!list.length) return;
+        const gk=list.reduce((s,e)=>s+e.kcal,0);
+        html+=`<div class="group"><div class="group-head"><span class="gname"><span class="emoji">${MEAL_EMOJI[meal]||"🍴"}</span>${meal}</span><span class="gkcal">${gk.toLocaleString("de-DE")} kcal</span></div>`;
+        list.forEach(e=>{
+          html+=`<div class="entry"><span class="ename">${esc(e.name)}</span><span class="ekcal" data-id="${e.id}" title="Kalorien ändern">${e.kcal?e.kcal.toLocaleString("de-DE")+" kcal":"kcal +"}</span><button class="del" data-id="${e.id}" aria-label="Löschen">×</button></div>`;
+        });
+        html+=`</div>`;
+      });
+      entriesEl.innerHTML=html;
+    }
     renderRecent();
   }
 
   render();
-  // focus name field on load for instant typing (desktop)
-  if(window.matchMedia("(pointer:fine)").matches) foodName.focus();
+  if(window.matchMedia("(pointer:fine)").matches) aiInput.focus();
 })();
 </script>
 </body>
